@@ -1,0 +1,24 @@
+extends layout
+
+block content
+
+	h1 Sign Up for Bastion
+
+	form(action="/register", method="post")
+		ul
+			li
+				label Name
+				input(type="text", name="name")
+			li
+				label Email
+				input(type="email", name="email")
+			li
+				label Password
+				input(type="password", name="password")
+			li
+				label Confirm Password
+				input(type="password", name="confirm_password")
+			li
+				button(type="submit") Sign Up
+
+	.error #{error}

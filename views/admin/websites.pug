@@ -1,0 +1,15 @@
+extends ./adminlayout
+
+block content
+
+	h1 Websites
+
+	.panel.website-panel
+		h2 Add Website
+		input(type="text", placeholder="Website Name...")
+		input(type="text", placeholder="Website Domain...")
+		.btn Add
+
+	each website in websites 
+		.panel.website-panel
+			h2 #{website.name}

@@ -1,0 +1,36 @@
+extends ./adminlayout
+
+block content
+	.panel
+		h2 Recent Page Views
+		table
+			tr
+				th Date
+				th IP
+				th Domain
+				th Device
+				th Page URL
+			each pv in pageViews
+				tr
+					td #{pv.date_formatted}
+					td #{pv.ip}
+					td #{pv.domain}
+					td #{pv.device.type}
+					td #{pv.data_point.value}
+	.panel
+		h2 Emails Captured
+		table
+			tr
+				th Date
+				th IP
+				th Domain
+				th Email
+			each pv in emails
+				tr
+					td #{pv.date_formatted}
+					td #{pv.ip}
+					td #{pv.domain}
+					td #{pv.data_point.value}
+
+	
+

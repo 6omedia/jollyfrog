@@ -1,0 +1,13 @@
+extends layout
+
+block content
+
+	h1 Welcome, please login or if you dont have an account, 
+		a(href="/register") signup here
+	form(action="/" method="post")
+		label Email
+		input(type="text" name="email")
+		label Password
+		input(type="text" name="password")
+		button(type="submit") Login
+	#error #{error}

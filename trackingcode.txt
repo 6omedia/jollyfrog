@@ -1,0 +1,6 @@
+(function(){
+	
+	// ajax 
+		/jollyfrog.com/api/log_page_view
+
+})

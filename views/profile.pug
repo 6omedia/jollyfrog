@@ -1,0 +1,28 @@
+extends layout
+
+block content
+
+	h1 Welcome, #{name}
+
+	p Man braid sartorial keytar portland enamel pin. Paleo hoodie occupy beard four loko truffaut crucifix, stumptown bitters food truck cray. Beard trust fund biodiesel chicharrones bitters man braid vexillologist woke shaman drinking vinegar. Roof party semiotics vegan prism snackwave asymmetrical fam literally selfies flexitarian quinoa intelligentsia.
+
+	h2 Update Profile
+
+	form(action="/profile", method="post")
+		input(type="hidden", name="userId", value=`${id}`)
+		ul
+			li
+				label Name
+				input(type="text", name="q_name", value=`${name}`)
+			li
+				label Email
+				input(type="text", id="q_email", value=`${email}`)
+			li
+				label Age
+				input(type="text", id="q_age", value=`${age}`)
+			li
+				label Website
+				input(type="text", id="q_website", value=`${website}`)
+			li
+				input(type="submit")
+
