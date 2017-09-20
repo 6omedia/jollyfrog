@@ -3,6 +3,7 @@ process.env.NODE_ENV = 'test';
 let mongoose = require("mongoose");
 let User = require('../../../models/user');
 let Entry = require('../../../models/entry');
+let Device = require('../../../models/device');
 
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -41,6 +42,37 @@ describe('tracking routes', () => {
 
 	describe('/POST log_page_view', () => {
 
+        var fpObj = {
+            apikey: 'fuckyeahapi',
+            domain: 'website.com',
+            url: 'www.website.com/stuff?hmm=yeah',
+            fingerprint: 33224455,
+            type: 'Desktop',
+            vendor: 'Dell',
+            browser: 'Chrome',
+            os: 'Windows',
+            screen: {
+                res: '1920x1080',
+                colorDepth: '24'
+            },
+            timezone: 'GMT Daylight Time',
+            language: 'en-US'
+        };
+
+        beforeEach(function(done){
+
+            Entry.remove({}, function(err){
+                if(!err){
+                    Device.remove({}, function(err){
+                        if(!err){
+                            done();
+                        }
+                    });
+                }
+            });
+
+        });
+
 		it('should return 400 as no api key has been set', (done) => {
 			chai.request(server)
                 .post('/api/log_page_view')
@@ -71,11 +103,7 @@ describe('tracking routes', () => {
         it('should create a new entry', (done) => {
         	chai.request(server)
                 .post('/api/log_page_view')
-                .send({
-                	apikey: 'fuckyeahapi',
-                	domain: 'website.com',
-                	url: 'www.website.com/stuff?hmm=yeah'
-                })
+                .send(fpObj)
                 .end((err, res) => {
                     res.should.have.status(200);
                     Entry.findOne({domain: 'website.com'}, function(err, entry){
@@ -88,11 +116,7 @@ describe('tracking routes', () => {
         it('new entry should have an ip', (done) => {
         	chai.request(server)
                 .post('/api/log_page_view')
-                .send({
-                	apikey: 'fuckyeahapi',
-                	domain: 'website.com',
-                	url: 'www.website.com/stuff?hmm=yeah'
-                })
+                .send(fpObj)
                 .end((err, res) => {
                     res.should.have.status(200);
                     Entry.findOne({domain: 'website.com'}, function(err, entry){
@@ -105,11 +129,7 @@ describe('tracking routes', () => {
         it('new entry should have a date', (done) => {
         	chai.request(server)
                 .post('/api/log_page_view')
-                .send({
-                	apikey: 'fuckyeahapi',
-                	domain: 'website.com',
-                	url: 'www.website.com/stuff?hmm=yeah'
-                })
+                .send(fpObj)
                 .end((err, res) => {
                     res.should.have.status(200);
                     Entry.findOne({domain: 'website.com'}, function(err, entry){
@@ -122,11 +142,7 @@ describe('tracking routes', () => {
         it('new entry should have a domain', (done) => {
         	chai.request(server)
                 .post('/api/log_page_view')
-                .send({
-                	apikey: 'fuckyeahapi',
-                	domain: 'website.com',
-                	url: 'www.website.com/stuff?hmm=yeah'
-                })
+                .send(fpObj)
                 .end((err, res) => {
                     res.should.have.status(200);
                     Entry.findOne({domain: 'website.com'}, function(err, entry){
@@ -136,20 +152,119 @@ describe('tracking routes', () => {
                 }); 
         });
 
-        it('new entry should have a device object', (done) => {
+        it('new entry should have a browser', (done) => {
+            chai.request(server)
+                .post('/api/log_page_view')
+                .send(fpObj)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    Entry.findOne({domain: 'website.com'}, function(err, entry){
+                        entry.browser.should.equal('Chrome');
+                        done();
+                    });
+                }); 
+        });
+
+        it('new entry should have a timezone', (done) => {
+            chai.request(server)
+                .post('/api/log_page_view')
+                .send(fpObj)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    Entry.findOne({domain: 'website.com'}, function(err, entry){
+                        entry.timezone.should.equal('GMT Daylight Time');
+                        done();
+                    });
+                }); 
+        });
+
+        it('new entry should have a language', (done) => {
+            chai.request(server)
+                .post('/api/log_page_view')
+                .send(fpObj)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    Entry.findOne({domain: 'website.com'}, function(err, entry){
+                        entry.language.should.equal('en-US');
+                        done();
+                    });
+                }); 
+        });
+
+        it('new entry should have a device id', (done) => {
         	chai.request(server)
                 .post('/api/log_page_view')
-                .send({
-                	apikey: 'fuckyeahapi',
-                	domain: 'website.com',
-                	url: 'www.website.com/stuff?hmm=yeah'
-                })
+                .send(fpObj)
                 .end((err, res) => {
                     res.should.have.status(200);
                     Entry.findOne({domain: 'website.com'}, function(err, entry){
                     	entry.should.have.property('device');
-                    	// console.log(entry.device);
                     	done();
+                    });
+                }); 
+        });
+
+        it('should create a new device', (done) => {
+            chai.request(server)
+                .post('/api/log_page_view')
+                .send(fpObj)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    Device.findOne({fingerprint: 33224455}, function(err, device){
+                        device.should.be.an('object');
+                        done();
+                    });
+                }); 
+        });
+
+        it('device type should be Desktop', (done) => {
+            chai.request(server)
+                .post('/api/log_page_view')
+                .send(fpObj)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    Device.findOne({fingerprint: 33224455}, function(err, device){
+                        device.type.should.equal('Desktop');
+                        done();
+                    });
+                }); 
+        });
+
+        it('device vendor should be Dell', (done) => {
+            chai.request(server)
+                .post('/api/log_page_view')
+                .send(fpObj)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    Device.findOne({fingerprint: 33224455}, function(err, device){
+                        device.vendor.should.equal('Dell');
+                        done();
+                    });
+                }); 
+        });
+
+        it('device os should be Windows', (done) => {
+            chai.request(server)
+                .post('/api/log_page_view')
+                .send(fpObj)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    Device.findOne({fingerprint: 33224455}, function(err, device){
+                        device.os.should.equal('Windows');
+                        done();
+                    });
+                }); 
+        });
+
+        it('device screen should be an object', (done) => {
+            chai.request(server)
+                .post('/api/log_page_view')
+                .send(fpObj)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    Device.findOne({fingerprint: 33224455}, function(err, device){
+                        device.screen.should.an('object');
+                        done();
                     });
                 }); 
         });
@@ -157,11 +272,7 @@ describe('tracking routes', () => {
         it('new entry should have a datapoint with property name that equals page view', (done) => {
         	chai.request(server)
                 .post('/api/log_page_view')
-                .send({
-                	apikey: 'fuckyeahapi',
-                	domain: 'website.com',
-                	url: 'www.website.com/stuff?hmm=yeah'
-                })
+                .send(fpObj)
                 .end((err, res) => {
                     res.should.have.status(200);
                     Entry.findOne({domain: 'website.com'}, function(err, entry){
@@ -208,7 +319,18 @@ describe('tracking routes', () => {
                     apikey: 'notanaipkey',
                     domain: 'website.com',
                     datapoints: JSON.stringify(dataPoints),
-                    form_name: 'test form'
+                    form_name: 'test form',
+                    fingerprint: 33224455,
+                    type: 'Desktop',
+                    vendor: 'Dell',
+                    browser: 'Chrome',
+                    os: 'Windows',
+                    screen: {
+                        res: '1920x1080',
+                        colorDepth: '24'
+                    },
+                    timezone: 'GMT Daylight Time',
+                    language: 'en-US'
                 })
                 .end((err, res) => {
                     res.should.have.status(403);
@@ -225,7 +347,18 @@ describe('tracking routes', () => {
                     apikey: 'fuckyeahapi',
                     domain: 'website.com',
                     datapoints: JSON.stringify(dataPoints),
-                    form_name: 'test form'
+                    form_name: 'test form',
+                    fingerprint: 33224455,
+                    type: 'Desktop',
+                    vendor: 'Dell',
+                    browser: 'Chrome',
+                    os: 'Windows',
+                    screen: {
+                        res: '1920x1080',
+                        colorDepth: '24'
+                    },
+                    timezone: 'GMT Daylight Time',
+                    language: 'en-US'
                 })
                 .end((err, res) => {
                     Entry.find({form_name: 'test form'}, function(err, entries){
@@ -244,7 +377,18 @@ describe('tracking routes', () => {
                     apikey: 'fuckyeahapi',
                     domain: 'website.com',
                     datapoints: JSON.stringify(dataPoints),
-                    form_name: 'test form'
+                    form_name: 'test form',
+                    fingerprint: 33224455,
+                    type: 'Desktop',
+                    vendor: 'Dell',
+                    browser: 'Chrome',
+                    os: 'Windows',
+                    screen: {
+                        res: '1920x1080',
+                        colorDepth: '24'
+                    },
+                    timezone: 'GMT Daylight Time',
+                    language: 'en-US'
                 })
                 .end((err, res) => {
                     res.should.have.status(200);

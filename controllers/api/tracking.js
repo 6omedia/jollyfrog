@@ -3,6 +3,7 @@ const trackingRoutes = express.Router();
 const mongoose = require('mongoose');
 const User = require('../../models/user');
 const Entry = require('../../models/entry');
+const Device = require('../../models/device');
 const mid = require('../../middleware/session');
 const device = require('device');
 const async = require('async');
@@ -34,7 +35,10 @@ trackingRoutes.post('/log_page_view', mid.apiKeyRequired, function(req, res){
 	Entry.create({
 		userId: user._id,
 		ip: ip,
-		device: device(req.headers['user-agent']),
+		device: req.body.fingerprint,
+		browser: req.body.browser,
+		timezone: req.body.timezone,
+	    language: req.body.language,
 		date: new Date(),
 		domain: req.body.domain,
 		data_point: {
@@ -49,9 +53,42 @@ trackingRoutes.post('/log_page_view', mid.apiKeyRequired, function(req, res){
 			return res.json(data);
 		}
 
-		res.status(200);
-		data.success = 'Successfull Entry';
-		return res.json(data);
+		Device.findOne({fingerprint: req.body.fingerprint}, function(err, device){
+
+			if(err){
+				res.status(err.status || 500);
+				data.error = err;
+				return res.json(data);
+			}
+
+			if(!device){
+
+				Device.create({
+					fingerprint: req.body.fingerprint,
+				    type: req.body.type,
+				    vendor: req.body.vendor,
+				    os: req.body.os,
+				    screen: {
+				        res: req.body.screen.res,
+				        colorDepth: req.body.colorDepth
+				    }
+				}, function(err, device){
+
+					if(err){
+						res.status(err.status || 500);
+						data.error = err;
+						return res.json(data);
+					}
+
+					res.status(200);
+					data.success = 'Successfull Entry';
+					return res.json(data);
+
+				});
+
+			}
+
+		});
 
 	});
 
@@ -88,7 +125,10 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
     	Entry.create({
 			userId: user._id,
 			ip: ip,
-			device: device(req.headers['user-agent']),
+			device: req.body.fingerprint,
+			browser: req.body.browser,
+			timezone: req.body.timezone,
+			language: req.body.language,
 			date: new Date(),
 			domain: req.body.domain,
 			data_point: {
@@ -104,7 +144,46 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
 				return res.json(data);
 			}
 
-			callback();
+			Device.findOne({fingerprint: req.body.fingerprint}, function(err, device){
+
+				if(err){
+					res.status(err.status || 500);
+					data.error = err;
+					return res.json(data);
+				}
+
+				if(!device){
+
+					Device.create({
+						fingerprint: req.body.fingerprint,
+					    type: req.body.type,
+					    vendor: req.body.vendor,
+					    os: req.body.os,
+					    screen: {
+					        res: req.body.screen.res,
+					        colorDepth: req.body.colorDepth
+					    }
+					}, function(err, device){
+
+						if(err){
+							res.status(err.status || 500);
+							data.error = err;
+							return res.json(data);
+						}
+
+						callback();
+
+						res.status(200);
+						data.success = 'Successfull Entry';
+						return res.json(data);
+
+					});
+
+				}else{
+					callback();
+				}
+
+			});
 
 		});
 

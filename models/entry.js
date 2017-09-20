@@ -2,7 +2,10 @@ var mongoose = require('mongoose');
 var EntrySchema = new mongoose.Schema({
 	userId: String,
 	ip: String,
-	device: Object,
+	device: Number,
+	browser: String,
+	timezone: String,
+    language: String,
 	date: {
 		type: Date
 	},

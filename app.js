@@ -75,6 +75,10 @@ app.use(bodyParser.text());
 app.use(bodyParser.json({ type: 'application/json'}));  
 
 app.use('/static', express.static('public'));
+// app.use('/static/lib/clientjs', function(req, res){
+// 	var clientjs = require('clientjs');
+// 	res.send(clientjs);
+// });
 
 // main routes
 var mainRoutes = require('./controllers/main.js');
@@ -98,8 +102,8 @@ app.use(function(err, req, res, next) {
 	});
 });
 
-app.listen(3000, function () {
-	console.log('App running on port 3000');
+app.listen(20100, function () {
+	console.log('App running on port 20100');
 });
 
 module.exports = app;

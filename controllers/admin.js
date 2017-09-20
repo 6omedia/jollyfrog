@@ -3,6 +3,7 @@ const adminRoutes = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/user');
 const Entry = require('../models/entry');
+const Device = require('../models/device');
 const mid = require('../middleware/session');
 const moment = require('moment');
 
@@ -30,10 +31,20 @@ adminRoutes.get('/', mid.loginRequired, function(req, res, next){
 				element.date_formatted = moment(element.date).format('DD/MM/YYYY');
 			});
 
-			res.render('admin/admin', {
-				pageViews: pageViews,
-				emails: emails,
-				error: ''
+			Device.find({}, function(err, devices){
+
+				if(err){
+					res.status(err.status || 500);
+					return next(err);
+				}
+
+				res.render('admin/admin', {
+					pageViews: pageViews,
+					emails: emails,
+					devices: devices,
+					error: ''
+				});
+
 			});
 
 		});

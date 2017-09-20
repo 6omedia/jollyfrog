@@ -8,29 +8,45 @@ block content
 				th Date
 				th IP
 				th Domain
-				th Device
+				th Browser
+				th Time Zone
 				th Page URL
 			each pv in pageViews
 				tr
 					td #{pv.date_formatted}
 					td #{pv.ip}
-					td #{pv.domain}
-					td #{pv.device.type}
+					td #{pv.browser}
+					td #{pv.time_zone}
 					td #{pv.data_point.value}
+
+	//- .panel
+	//- 	h2 Emails Captured
+	//- 	table
+	//- 		tr
+	//- 			th Date
+	//- 			th IP
+	//- 			th Domain
+	//- 			th Email
+	//- 		each pv in emails
+	//- 			tr
+	//- 				td #{pv.date_formatted}
+	//- 				td #{pv.ip}
+	//- 				td #{pv.domain}
+	//- 				td #{pv.data_point.value}
 	.panel
-		h2 Emails Captured
+		h2 Unique Devices
 		table
 			tr
-				th Date
-				th IP
-				th Domain
-				th Email
-			each pv in emails
+				th Finger Print
+				th Type
+				th Vendor
+				th Operating System
+			each device in devices
 				tr
-					td #{pv.date_formatted}
-					td #{pv.ip}
-					td #{pv.domain}
-					td #{pv.data_point.value}
+					td #{device.fingerprint}
+					td #{device.type}
+					td #{device.vendor}
+					td #{device.os}
 
 	
 
