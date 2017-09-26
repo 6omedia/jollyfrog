@@ -2,7 +2,9 @@ const express = require('express');
 const mainRoutes = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/user');
+const Entry = require('../models/entry');
 const mid = require('../middleware/session');
+const http = require('http');
 
 mainRoutes.get('/', mid.loggedIn, function(req, res){
 
@@ -34,7 +36,7 @@ mainRoutes.post('/', function(req, res){
 			req.session.userId = user._id;
 			res.loggedInUser = user._id;
 
-			return res.redirect('/profile');
+			return res.redirect('/dashboard');
 
 		});
 
@@ -76,6 +78,8 @@ mainRoutes.get('/profile', mid.loginRequired, function(req, res){
         return res.render('profile', {
         	id: user._id,
             name: user.name,
+            user: user,
+            current: 'profile',
             age: '',
             website: ''
         });
@@ -114,7 +118,7 @@ mainRoutes.post('/register', function(req, res){
 
         // login and start session
         req.session.userId = user._id;
-        return res.redirect('/profile');
+        return res.redirect('/dashboard');
 
     });
 
@@ -211,6 +215,111 @@ mainRoutes.delete('/profile/:userId', mid.jsonLoginRequired, function(req, res){
 		});
 
     });
+
+});
+
+mainRoutes.get('/websites', mid.loginRequired, function(req, res){
+
+	User.findById(req.session.userId, function(err, user){
+
+        if(err){
+            return next(err);
+        }
+
+		res.render('websites/websites', {
+			error: '',
+			current: 'websites',
+			user: user
+		});
+
+	});
+
+});
+
+mainRoutes.get('/websites/:domain', mid.loginRequired, function(req, res, next){
+
+	let stats = {};
+	const domain = req.params.domain;
+	let theWebsite = '';
+
+	User.findById(req.session.userId, function(err, user){
+
+        if(err){
+            return next(err);
+        }
+
+
+        if(user.websites){
+		
+			let found = false;
+
+			for(i=0; i<user.websites.length; i++){
+
+				let website = user.websites[i];
+				if(website.domain == domain){
+					found = true;
+					theWebsite = website;
+				}
+
+			}
+
+			if(!found){	
+				stats.error = 'Domain Not Found';
+			}
+
+		}else{
+			stats.error = 'Domain Not Found';
+		}
+
+		Entry.getPageViews(req.session.userId, domain, 'from', 'to', function(err, pageviews){
+
+			if(err){
+				next(err);
+			}
+
+			stats.pageviews = pageviews;
+
+			Entry.getDevices(req.session.userId, domain, 'from', 'to', function(err, devices){
+
+				if(err){
+					next(err);
+				}
+
+				stats.devices = devices;
+
+				console.log(stats);
+
+				res.render('websites/websites', {
+					error: '',
+					current: 'websites',
+					user: user,
+					website: theWebsite,
+					stats: stats
+				});
+
+			});
+
+		});
+
+	});
+
+});
+
+mainRoutes.get('/dashboard', mid.loginRequired, function(req, res){
+
+	User.findById(req.session.userId, function(err, user){
+
+        if(err){
+            return next(err);
+        }
+
+		res.render('dashboard', {
+			error: '',
+			current: 'dashboard',
+			user: user
+		});
+
+	});
 
 });
 

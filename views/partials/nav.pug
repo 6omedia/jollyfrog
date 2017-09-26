@@ -1,0 +1,11 @@
+nav.top_nav
+	p Hey, #{user.name}
+	ul
+		li
+			a(href="/dashboard", class=(current == 'dashboard' ? 'current' : false)) Dashboard
+		li
+			a(href="/websites", class=(current == 'websites' ? 'current' : false)) Websites
+		li
+			a(href="/profile", class=(current == 'profile' ? 'current' : false)) Profile
+		li
+			a(href="/logout") Logout

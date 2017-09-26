@@ -1,0 +1,30 @@
+extends layout
+
+block content
+
+	include ./partials/nav
+
+	.darkCont
+		h1 Dashboard
+		
+		.theContainer
+			.panel.websites
+				h2 Websites
+				ul
+					li Makeup Tuts
+						span x
+					li 6oMedia
+						span x
+					li FxOptions Pro
+						span x
+					li FozzleHut
+						span x
+				.addNew
+					h3 Add Website
+					.form
+						label Website name
+						input(type="text")
+						label Website domain
+						input(type="text")
+						.spin#spin_addws
+						.btnStyle Add

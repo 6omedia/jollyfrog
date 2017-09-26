@@ -92,6 +92,10 @@ app.use('/admin', adminRoutes);
 var apiRoutes = require('./controllers/api/tracking.js');
 app.use('/api', apiRoutes);
 
+// api routes
+var webApiRoutes = require('./controllers/api/websites.js');
+app.use('/api/websites', webApiRoutes);
+
 app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
 	return res.json({

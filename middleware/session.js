@@ -8,10 +8,7 @@ function loggedIn(req, res, next) {
 
         User.findById(req.session.userId, function(err, user){
             if(user.admin){
-                return res.redirect('/admin');
-
-            }else{
-                return res.redirect('/profile');
+                return res.redirect('/dashboard');
             }
             return next();
         });

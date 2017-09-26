@@ -8,6 +8,20 @@ h1 {
 	/*font-family: 'Bubblegum Sans', cursive;*/
 }
 
+ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.right {
+    float: right;
+}
+
+/* FORM ELEMENTS */
+
+
+
 .side_menu {
     background: linear-gradient(#001a32, #5c6a53);
     width: 120px;
@@ -49,6 +63,14 @@ h1 {
 .main_section header h1 {
 	margin: 0px;
     font-size: 32px;
+    display: inline-block;
+}
+
+.main_section header a {
+    color: #fff;
+    float: right;
+    padding-right: 20px;
+    font-size: 20px;
 }
 
 .main_section .rightSide {
@@ -87,6 +109,12 @@ section {
     font-size: 26px;
 }
 
+.panel ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
 table th,
 table td {
     padding: 5px 15px;
@@ -110,4 +138,340 @@ table tr:nth-child(even){
 .rightSide ul {
     padding: 0px;
     list-style: none;
+}
+
+.darkCont {
+    background: linear-gradient(-45deg, #001a32, #5c6a53);
+    background-attachment: fixed;
+    text-align: center;
+    min-height: 100%;
+    padding: 80px;
+}
+
+.darkCont p {
+    color: #cfcfcf;
+}
+
+.darkCont h1 {
+    color: #fff;
+}
+
+.darkCont > h1 {
+    padding: 0px 32%;
+}
+
+.darkCont h1 a {
+    color: cornsilk;
+    font-weight: bold;
+}
+
+.darkCont form {
+    background: #fff;
+    max-width: 380px;
+    margin: 65px auto;
+    padding: 20px;
+    box-shadow: 0px 0px 100px rgba(255, 254, 211, 0.5);
+    border-radius: 2px;
+    border-bottom: solid 2px #cdd2d5;
+}
+
+.darkCont form ul {
+    padding: 0px;
+    list-style: none;
+}
+
+.darkCont form label {
+    display: block;
+    font-size: 20px;
+}
+
+.darkCont form input {
+    margin-bottom: 10px;
+    width: 100%;
+    font-size: 18px;
+    padding: 5px 10px;
+    border: none;
+    background: cornsilk;
+    box-shadow: inset 3px 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.darkCont form input:focus {
+    background: #ffea96 !important;
+    box-shadow: none !important;
+    outline: none;
+}
+
+.darkCont form button {
+    background: linear-gradient(#1f8969, #125c45);
+    border: none;
+    padding: 5px 20px;
+    margin-top: 10px;
+    color: #deece7;
+    font-size: 20px;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.theContainer {
+    margin-top: 40px;
+    text-align: left;
+    overflow: hidden;
+}
+
+.error {
+    color: #ff9696;
+    font-size: 21px;
+}
+
+/* NAV */
+
+.top_nav {
+    background: #112437;
+    border-bottom: solid 3px #387395;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+}
+
+.top_nav ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    padding: 0px 10px;
+    float: right;
+}
+
+.top_nav ul li {
+    display: inline-block;
+}
+
+.top_nav ul li a {
+    color: #fff;
+    margin-right: 0px;
+    padding: 5px 10px;
+    display: inline-block;
+}
+
+.top_nav p {
+    color: #fff;
+    margin: 0px;
+    display: inline-block;
+    padding: 5px 0px 0px 15px;
+    font-weight: bold;
+}
+
+a.current {
+    background: #387395;
+}
+
+.theSide {
+    width: 20%;
+    float: left;
+    margin-right: 2%;
+}
+
+.main_bit {
+    width: 78%;
+    float: right;
+}
+
+.theSide .websites {
+    background: #fff;
+    padding: 10px;
+    box-shadow: 2px 0px 15px rgba(0, 0, 0, 0.15);
+    position: relative;
+    min-height: 100%;
+    max-height: 800px;
+}
+
+.theSide .websites.spinning::before {
+    content: '';
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9) url(../img/spin.gif) no-repeat 50% 125px;
+    background-size: 32px;
+}
+
+.theSide .websites ul li {
+    background: linear-gradient(#e8ecfe, #fff);
+    padding: 10px;
+    margin-top: 20px;
+    border-top: solid 2px;
+}
+
+/*.theSide .websites ul li {
+    background: linear-gradient(#e8ecfe, rgba(255, 255, 255, 0));
+    padding: 10px;
+    margin-top: 20px;
+    border-top: solid 2px;
+}*/
+
+.theSide .websites h2 {
+    font-size: 24px;
+}
+
+.statsCont {
+    background: #f0fff4;
+    background: #f4f4f4;
+    overflow: hidden;
+}
+
+.websiteList label, 
+.websiteList .btn {
+    display: none;
+}
+.edit_mode label,
+.edit_mode .btn {
+    display: block;
+}
+
+.edit_mode {
+    background: linear-gradient(#78ade2, #fff) !important;
+    border-top: solid 2px #3472af !important;
+}
+
+.edit_mode input {
+    font-size: 20px !important;
+    padding: 5px 10px;
+    width: 100%;
+    border: none;
+    border-bottom: solid 2px #ced2e8;
+    margin-bottom: 10px;
+}
+
+.edit_mode input:focus {
+    border-bottom: solid 2px #66d4ff;
+    outline: none;
+}
+
+.websiteList input[disabled="disabled"] {
+    background: transparent;
+    border: none;
+}
+
+.websiteList .websiteName_input {
+    font-size: 24px;
+}
+
+.websiteList .actions {
+    text-align: right;
+}
+
+.websiteList .actions span,
+.websiteList .actions a {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.actions .stats {
+    background: url(../img/stats.png) no-repeat 50%;
+    background-size: 100%;
+}
+
+.actions .edit {
+    background: url(../img/edit.png) no-repeat 50%;
+    background-size: 100%;
+}
+
+.actions .remove {
+    background: url(../img/delete.png) no-repeat 50%;
+    background-size: 100%;
+}
+
+.main_bit .stats {
+    padding: 15px 0px;
+}
+
+.main_bit .stats .header {
+    margin-bottom: 20px;
+}
+
+.box.pageviews {
+    width: 55%;
+    float: left;
+    margin-right: 2%;
+}
+
+.box.uniquedevices {
+    width: 41%;
+    float: left;
+}
+
+.btn_openform {
+    width: 100%;
+    background: #112437 url(../img/ddarrow.png) no-repeat 97% 50%;
+    color: #fff;
+    background-size: 20px;
+    text-align: left;
+    border-radius: 0px;
+}
+
+.btn_openform.open {
+    background: #003468 url(../img/duarrow.png) no-repeat 97% 50%;
+}
+
+#new_website_form {
+    display: none;
+    background: #638db7;
+    padding: 10px;
+}
+
+#new_website_form label {
+    display: block;
+    background: #457db5;
+    color: #daedff;
+    padding: 0px 10px;
+    margin-bottom: 0px;
+}
+
+#new_website_form input {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 5px 10px;
+    border: none;
+}
+
+.btn.save {
+    background: cornsilk;
+    cursor: pointer;
+}
+
+/* libs */ 
+
+.c_modal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    top: 0px;
+}
+
+.c_modal .box {
+    background: #fff;
+    padding: 25px;
+    width: 365px;
+    text-align: center;
+    margin: 85px auto;
+}
+
+.c_modal button {
+    margin: 0px 5px;
+    background: #327172;
+    color: #fff;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.thUrl {
+    max-width: 320px;
 }

@@ -2,6 +2,17 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 
+let WebsiteSchema = new Schema(
+    {
+        name: String,
+        domain: {
+            type: String,
+            unique: true
+        },
+        forms: Array
+    }
+);
+
 //book schema definition
 let UserSchema = new Schema(
     {
@@ -15,6 +26,7 @@ let UserSchema = new Schema(
           type: Boolean,
           default: false
         },
+        websites: [WebsiteSchema],
         apikey: {
             type: String,
             unique: true
