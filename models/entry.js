@@ -17,7 +17,7 @@ var EntrySchema = new mongoose.Schema({
 		name: String,
 		value: String
 	},
-	form_name: String,
+	meta: Object,
 	referer: String
 });
 

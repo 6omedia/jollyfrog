@@ -73,8 +73,8 @@
 			var string = '';
 			string += '<li data-domain="' + website.domain + '">';
 			string += '<div class="actions">';
-				string += '<span class="stats"></span>';
-				string += '<a href="/websites/' + website.domain + '" class="edit"></a>';
+				string += '<a href="/websites/' + website.domain + '" class="stats"></a>';
+				string += '<span class="edit"></span>';
 				string += '<span class="remove"></span>';
 			string += '</div>';
 			string += '<label>Name</label>';

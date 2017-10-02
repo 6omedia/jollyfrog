@@ -232,6 +232,7 @@ table tr:nth-child(even){
     position: fixed;
     top: 0px;
     width: 100%;
+    z-index: 1;
 }
 
 .top_nav ul {

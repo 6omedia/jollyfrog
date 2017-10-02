@@ -361,7 +361,7 @@ describe('tracking routes', () => {
                     language: 'en-US'
                 })
                 .end((err, res) => {
-                    Entry.find({form_name: 'test form'}, function(err, entries){
+                    Entry.find({'meta.form': 'test form'}, function(err, entries){
                         entries.length.should.equal(3);
                         done();
                     });

@@ -135,7 +135,9 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
 				name: dataPoint.name,
 				value: dataPoint.value
 			},
-			form_name: req.body.form_name
+			meta: {
+				form: req.body.form_name
+			}
 		}, function(err, entry){
 
 			if(err){
