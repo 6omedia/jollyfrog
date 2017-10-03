@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
+const Cryptr = require('cryptr'),
+    cryptr = new Cryptr('yeahLikehmmandSTUfF');
 
 let WebsiteSchema = new Schema(
     {
@@ -29,7 +31,8 @@ let UserSchema = new Schema(
         websites: [WebsiteSchema],
         apikey: {
             type: String,
-            unique: true
+            unique: true,
+            default: 'none'
         },
         created_at: Date,
         updated_at: Date  
@@ -116,6 +119,27 @@ UserSchema.statics.authenticate = function(email, password, callback){
 
         });
 
+    });
+
+};
+
+UserSchema.statics.genApiKey = function(id, callback){
+
+    const apiKey = cryptr.encrypt(id);
+    const thisUser = this;
+
+    this.findById(id, function(err){
+        if(err){
+            return callback(err, null);
+        }
+        thisUser.update({_id: id}, {
+            apikey: apiKey
+        }, function(err, raw){
+            if(err){
+                return callback(err, null);
+            }
+            callback(null, apiKey);
+        });
     });
 
 };

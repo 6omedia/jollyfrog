@@ -53,7 +53,7 @@ EntrySchema.statics.getPageViews = function(userId, domain, fromDate, toDate, ca
 			}
 
 			pageViews[i].data_point.value = url;
-			pageViews[i].display_date = moment(pageViews.date).format("MMM Do YY");
+			pageViews[i].display_date = moment(pageViews[i].date).format("MMM Do YY");
 		}
 
 		return callback(null, pageViews);

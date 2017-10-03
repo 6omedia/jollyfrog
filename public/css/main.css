@@ -20,7 +20,11 @@ ul {
 
 /* FORM ELEMENTS */
 
-
+.btn {
+    background: #387395;
+    color: #e0f4ff;
+    cursor: pointer;
+}
 
 .side_menu {
     background: linear-gradient(#001a32, #5c6a53);
@@ -95,25 +99,6 @@ section {
     box-shadow: 3px 2px 16px 0px rgba(17, 42, 50, 0.12);
     margin: 0px 15px 15px 0px;
 }*/
-
-.panel {
-    display: inline-block;
-    background: #fcfffb;
-    padding: 10px;
-    border: solid 1px #bed0c3;
-    margin: 0px 15px 15px 0px;
-}
-
-.panel h2 {
-    margin-bottom: 15px;
-    font-size: 26px;
-}
-
-.panel ul {
-    list-style: none;
-    padding: 0px;
-    margin: 0px;
-}
 
 table th,
 table td {
@@ -222,6 +207,47 @@ table tr:nth-child(even){
 .error {
     color: #ff9696;
     font-size: 21px;
+}
+
+.panel {
+    display: inline-block;
+    background: #fcfffb;
+    padding: 10px;
+    border: solid 1px #bed0c3;
+    margin: 0px 15px 15px 0px;
+}
+
+.panspin {
+    position: relative;
+}
+
+.panspin:before {
+    content: '';
+    top: 0px;
+    left: 0px;
+    background: rgba(255, 255, 255, 0.89) url('../img/833.gif') no-repeat 50%;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.panel .btn {
+    margin-top: 10px;
+}
+
+.panel h2 {
+    margin-bottom: 15px;
+    font-size: 26px;
+}
+
+.panel ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.panel p {
+    color: #555;
 }
 
 /* NAV */

@@ -96,6 +96,10 @@ app.use('/api', apiRoutes);
 var webApiRoutes = require('./controllers/api/websites.js');
 app.use('/api/websites', webApiRoutes);
 
+// api routes
+var dashboardApiRoutes = require('./controllers/api/dashboard.js');
+app.use('/api/dashboard', dashboardApiRoutes);
+
 app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
 	return res.json({

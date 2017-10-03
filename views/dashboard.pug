@@ -8,23 +8,35 @@ block content
 		h1 Dashboard
 		
 		.theContainer
+			.panel
+				h2 API Key
+				b Current API Key: 
+				span#apikey #{user.apikey}
+				br
+				if !user.apikey || user.apikey == 'none'
+					.btn#genApiKey Generate API key
+				else
+					.btn#genNewApiKey Generate New API key
 			.panel.websites
-				h2 Websites
-				ul
-					li Makeup Tuts
-						span x
-					li 6oMedia
-						span x
-					li FxOptions Pro
-						span x
-					li FozzleHut
-						span x
-				.addNew
-					h3 Add Website
-					.form
-						label Website name
-						input(type="text")
-						label Website domain
-						input(type="text")
-						.spin#spin_addws
-						.btnStyle Add
+				//- h2 Websites
+				//- ul
+				//- 	li Makeup Tuts
+				//- 		span x
+				//- 	li 6oMedia
+				//- 		span x
+				//- 	li FxOptions Pro
+				//- 		span x
+				//- 	li FozzleHut
+				//- 		span x
+				//- .addNew
+				//- 	h3 Add Website
+				//- 	.form
+				//- 		label Website name
+				//- 		input(type="text")
+				//- 		label Website domain
+				//- 		input(type="text")
+				//- 		.spin#spin_addws
+				//- 		.btnStyle Add
+	script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")
+	script(src="/static/js/popup.js")
+	script(src="/static/js/dashboard.js")

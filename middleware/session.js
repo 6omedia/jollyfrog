@@ -1,4 +1,6 @@
 const User = require('../models/user');
+var Cryptr = require('cryptr'),
+    cryptr = new Cryptr('yeahLikehmmandSTUfF');
 
 // redered rounte
 
@@ -42,7 +44,7 @@ function jsonLoginRequired(req, res, next){
 
 function apiKeyRequired(req, res, next){
 
-    if(!req.body.apikey){
+    if(!req.body.apikey || req.body.apikey == 'none'){
         res.status(400);
         return res.json({
             error: {
@@ -52,14 +54,14 @@ function apiKeyRequired(req, res, next){
         });
     }
 
+   // const apiKey = cryptr.decrypt(req.body.apikey);
+    // console.log('apikey ', apiKey);
+
     User.findOne({apikey: req.body.apikey}, function(err, user){
 
         if(err){
             return next(err);
         }
-
-        // console.log('apikey ', req.body.apikey);
-        // console.log('user ', user);
 
         if(!user){
             res.status(403);
