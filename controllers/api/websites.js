@@ -186,7 +186,13 @@ websitesRoutes.get('/:domain/stats', mid.jsonLoginRequired, function(req, res){
 			return res.json(body);
 		}
 
-		Entry.getPageViews(req.session.userId, domain, 'from', 'to', function(err, pageviews){
+		let fp = '';
+
+		if(req.query.funnelposition){
+			fp = req.query.funnelposition;
+		}
+
+		Entry.getPageViews(req.session.userId, domain, 'from', 'to', fp, function(err, pageviews){
 
 			if(err){
 				res.status(err.status || 500);
@@ -194,7 +200,7 @@ websitesRoutes.get('/:domain/stats', mid.jsonLoginRequired, function(req, res){
 				return res.json(body);
 			}
 
-			Entry.getDevices(req.session.userId, domain, 'from', 'to', function(err, devices){
+			Entry.getDevices(req.session.userId, domain, 'from', 'to', fp, function(err, devices){
 
 				if(err){
 					res.status(err.status || 500);

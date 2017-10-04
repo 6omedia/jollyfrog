@@ -100,6 +100,10 @@ section {
     margin: 0px 15px 15px 0px;
 }*/
 
+table {
+    position: relative;
+}
+
 table th,
 table td {
     padding: 5px 15px;
@@ -312,7 +316,7 @@ a.current {
     max-height: 800px;
 }
 
-.theSide .websites.spinning::before {
+.spinning::before {
     content: '';
     position: absolute;
     top: 0px;
@@ -320,6 +324,11 @@ a.current {
     width: 100%;
     height: 100%;
     background: rgba(255, 255, 255, 0.9) url(../img/spin.gif) no-repeat 50% 125px;
+    background-size: 32px;
+}
+
+table.spinning::before {
+    background: rgba(255, 255, 255, 0.9) url(../img/spin.gif) no-repeat 50%;
     background-size: 32px;
 }
 
@@ -501,4 +510,20 @@ a.current {
 
 .thUrl {
     max-width: 320px;
+}
+
+.filters {
+    margin: 10px 0px;
+}
+
+.filters li {
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 10px;
+    color: #35aa8b;
+    text-decoration: underline;
+}
+
+.filters li.current {
+    font-weight: bold;
 }

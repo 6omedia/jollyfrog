@@ -1,0 +1,44 @@
+<script type="text/javascript" src="https://clientjs.org/js/client.min.js"></script>
+<script>
+
+    // * JollyFrog Tracking * //
+
+    jQuery(document).ready(function($){
+
+        var client = new ClientJS();
+
+        document.onreadystatechange = () => {
+          if(document.readyState === 'complete'){
+        
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status == 200) {
+                    console.log(this);
+                }
+            };
+            xhttp.open("POST", "http://eveningbastion.6omedia.co.uk/api/log_page_view", true);
+            // xhttp.open("POST", "http://localhost:20100/api/log_page_view", true);
+            xhttp.setRequestHeader("Content-Type", "application/json");
+            xhttp.send(JSON.stringify({
+                apikey: 'a40acf3475b357d1a0334b668bd347a75693f805abb4e5fd',
+                domain: window.location.hostname,
+                url: window.location.href,
+                fingerprint: client.getFingerprint(),
+                type: client.getDeviceType(),
+                vendor: client.getDeviceVendor(),
+                browser: client.getBrowser(),
+                os: client.getOS(),
+                screen: {
+                    res: client.getAvailableResolution(),
+                    colorDepth: client.getColorDepth()
+                },
+                timezone: client.getTimeZone(),
+                language: client.getLanguage()
+            }));
+            
+          }
+        };
+
+    });
+
+</script>

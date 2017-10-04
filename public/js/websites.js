@@ -1,7 +1,9 @@
 (function(Popup){
 
 	function Model(obj){
+		this.domain = '';
 		this.websites = [];
+		this.currentFpFiler = 'All';
 	}
 	Model.prototype.addWebsite = function(name, domain, callback){
 		var thisModel = this;
@@ -45,6 +47,24 @@
 			}
 		});
 	};
+	Model.prototype.updateStats = function(fp, domain, callback){
+
+		$.ajax({
+			url: '/api/websites/' + domain + '/stats',
+			method: 'GET',
+			data: {
+				funnelposition: fp
+			},
+			success: function(data){
+				callback(data.page_views, data.unique_devices);
+			},
+			error: function(a, b, c){
+				console.log(a, b, c);
+				callback();
+			}
+		});
+
+	};
 
 	function View(){
 		this.addNewForm = $('#new_website_form');
@@ -54,6 +74,11 @@
 			domain: $('#q_domain')
 		}
 		this.websiteList = $('.websiteList');
+		this.filterLi = $('.filters li');
+		this.tables = {
+			pageviews: $('.pageviews table'),
+			devices: $('.uniquedevices table')
+		}
 	}
 	View.prototype.toggleAddwebsite = function(btn){
 		if($(btn).hasClass('open')){
@@ -88,7 +113,50 @@
 
 	};
 
+	View.prototype.updatePageviews = function(pageViews){
+
+		$('.pageviews table tr:not(:first)').remove();
+		var table = $('.pageviews table');
+
+		for(i=0; i<pageViews.length; i++){
+			var pageView = pageViews[i];
+			var tr = '';
+			tr += '<tr>';
+			tr += '<td class="thUrl">' + pageView.data_point.value + '</td>';
+			tr += '<td>' + pageView.display_date + '</td>';
+			tr += '<td>' + pageView.ip + '</td>';
+			tr += '<td>' + pageView.browser + '</td>';
+			tr += '<td>' + pageView.timezone + '</td>';
+			tr += '</tr>';
+			table.append(tr);
+		}
+
+	};
+
+	View.prototype.updateDevices = function(devices){
+
+		$('.uniquedevices table tr:not(:first)').remove();
+		var table = $('.uniquedevices table');
+
+		for(i=0; i<devices.length; i++){
+			var device = devices[i];
+			var type = device.type || '';
+			var vendor = device.vendor || '';
+			var tr = '';
+			tr += '<tr>';
+			tr += '<td>' + device.fingerprint + '</td>';
+			tr += '<td>' + type + '</td>';
+			tr += '<td>' + vendor + '</td>';
+			tr += '<td>' + device.os + '</td>';
+			tr += '</tr>';
+			table.append(tr);
+		}
+
+	};
+
 	function Websites(Model, View){
+
+		var thisWebsites = this;
 
 		var view = new View();
 		var model = new Model({});
@@ -143,7 +211,25 @@
 
 		});
 
+		view.filterLi.on('click', function(){
+			thisWebsites.filterPageViews(this, view, model);
+		});
+
 	}
+
+	Websites.prototype.filterPageViews = function(fpli, view, model){
+		view.filterLi.removeClass('current');
+		$(view.filterLi.get($(fpli).index())).addClass('current');
+
+		view.tables.pageviews.addClass('spinning');
+		view.tables.devices.addClass('spinning');
+		model.updateStats($(fpli).text(), $('#theDomain').text(), function(pageviews, devices){
+			view.updatePageviews(pageviews);
+			view.updateDevices(devices);
+			view.tables.pageviews.removeClass('spinning');
+			view.tables.devices.removeClass('spinning');
+		});
+	};
 
 	Websites.prototype.updateModelFromView = function() {
 		

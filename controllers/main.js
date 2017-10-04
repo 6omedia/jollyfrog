@@ -271,15 +271,17 @@ mainRoutes.get('/websites/:domain', mid.loginRequired, function(req, res, next){
 			stats.error = 'Domain Not Found';
 		}
 
-		Entry.getPageViews(req.session.userId, domain, 'from', 'to', function(err, pageviews){
+		Entry.getPageViews(req.session.userId, domain, 'from', 'to', '', function(err, pageviews){
 
 			if(err){
 				next(err);
 			}
 
+			// console.log();
+
 			stats.pageviews = pageviews;
 
-			Entry.getDevices(req.session.userId, domain, 'from', 'to', function(err, devices){
+			Entry.getDevices(req.session.userId, domain, 'from', 'to', '', function(err, devices){
 
 				if(err){
 					next(err);
@@ -287,7 +289,8 @@ mainRoutes.get('/websites/:domain', mid.loginRequired, function(req, res, next){
 
 				stats.devices = devices;
 
-				console.log(stats);
+				console.log('PAGE VIEW: ', stats.pageviews[0]);
+				console.log('DISPATDATE: ', stats.pageviews[0].display_date);
 
 				res.render('websites/websites', {
 					error: '',

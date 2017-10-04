@@ -44,7 +44,8 @@ trackingRoutes.post('/log_page_view', mid.apiKeyRequired, function(req, res){
 		data_point: {
 			name: 'page view',
 			value: req.body.url
-		}
+		},
+		meta: req.body.meta || {}
 	}, function(err, entry){
 
 		if(err){

@@ -21,13 +21,17 @@ var EntrySchema = new mongoose.Schema({
 	referer: String
 });
 
-EntrySchema.statics.getPageViews = function(userId, domain, fromDate, toDate, callback){
+EntrySchema.statics.getPageViews = function(userId, domain, fromDate, toDate, fp, callback){
 
 	let query = {
 		'userId': userId,
 		'domain': domain,
 		'data_point.name': 'page view'
 	};
+
+	if(fp != '' && fp != 'All'){
+		query['meta.funnel_position'] = fp.toLowerCase();
+	}
 
 	let selected = {
 		browser: true,
@@ -37,7 +41,7 @@ EntrySchema.statics.getPageViews = function(userId, domain, fromDate, toDate, ca
 		data_point: true
 	};
 
-	Entry.find(query).select(selected).sort({date: -1}).limit(30).exec(function(err, pageViews){
+	Entry.find(query).select(selected).sort({date: -1}).lean().limit(30).exec(function(err, pageViews){
 
 		if(err){
 			return callback(err, null);
@@ -54,6 +58,7 @@ EntrySchema.statics.getPageViews = function(userId, domain, fromDate, toDate, ca
 
 			pageViews[i].data_point.value = url;
 			pageViews[i].display_date = moment(pageViews[i].date).format("MMM Do YY");
+
 		}
 
 		return callback(null, pageViews);
@@ -62,12 +67,18 @@ EntrySchema.statics.getPageViews = function(userId, domain, fromDate, toDate, ca
 
 };
 
-EntrySchema.statics.getDevices = function(userId, domain, fromDate, toDate, callback){
+EntrySchema.statics.getDevices = function(userId, domain, fromDate, toDate, fp, callback){
 
 	let query = {
 		'userId': userId,
 		'domain': domain
 	};
+
+	//console.log(fp, ' ', fp != '' && fp != 'All');
+
+	if(fp != '' && fp != 'All'){
+		query['meta.funnel_position'] = fp.toLowerCase();
+	}
 
 	let selected = {
 		fingerprint: true
