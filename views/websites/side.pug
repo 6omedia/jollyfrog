@@ -1,0 +1,23 @@
+.websites
+	h2 Your Websites
+	.btn.btn_openform Add Website
+	.form#new_website_form
+		label Name
+		input(type="text", placholder="Website Name...")#q_name
+		label Domain (without the http:// or slashes)
+		input(type="text", placholder="Website Domain...")#q_domain
+		.btn#add_new.save Add
+
+	ul.websiteList
+		each website in user.websites
+			li(data-domain=`${website.domain}` class=selWebsite === website.domain ? "selected" : "")
+				.actions
+					a(href=`/websites/${website.domain}`).stats
+					a(href=`/websites/forms/${website.domain}`).forms
+					span.edit
+					span.remove
+				label Name
+				input(type="text", value=`${website.name}`, disabled).websiteName_input
+				label URL
+				input(type="text", value=`${website.domain}`, disabled).websiteDomain_input
+				.btn.save Save

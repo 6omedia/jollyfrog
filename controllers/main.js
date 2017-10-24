@@ -3,7 +3,9 @@ const mainRoutes = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/user');
 const Entry = require('../models/entry');
+const ExcludedDevice = require('../models/excluded_device');
 const mid = require('../middleware/session');
+const helpers = require('../helpers/helpers');
 const http = require('http');
 
 mainRoutes.get('/', mid.loggedIn, function(req, res){
@@ -248,7 +250,6 @@ mainRoutes.get('/websites/:domain', mid.loginRequired, function(req, res, next){
             return next(err);
         }
 
-
         if(user.websites){
 		
 			let found = false;
@@ -277,8 +278,6 @@ mainRoutes.get('/websites/:domain', mid.loginRequired, function(req, res, next){
 				next(err);
 			}
 
-			// console.log();
-
 			stats.pageviews = pageviews;
 
 			Entry.getDevices(req.session.userId, domain, 'from', 'to', '', function(err, devices){
@@ -289,15 +288,13 @@ mainRoutes.get('/websites/:domain', mid.loginRequired, function(req, res, next){
 
 				stats.devices = devices;
 
-				console.log('PAGE VIEW: ', stats.pageviews[0]);
-				console.log('DISPATDATE: ', stats.pageviews[0].display_date);
-
-				res.render('websites/websites', {
+				res.render('websites/stats', {
 					error: '',
 					current: 'websites',
 					user: user,
 					website: theWebsite,
-					stats: stats
+					stats: stats,
+					selWebsite: domain
 				});
 
 			});
@@ -305,6 +302,78 @@ mainRoutes.get('/websites/:domain', mid.loginRequired, function(req, res, next){
 		});
 
 	});
+
+});
+
+mainRoutes.get('/websites/forms/:domain', mid.loginRequired, function(req, res){
+
+	const domain = req.params.domain;
+
+	User.findById(req.session.userId, function(err, user){
+
+        if(err){
+            return next(err);
+        }
+
+        User.findOne({
+			_id: req.session.userId, 
+			'websites.domain': domain
+		}, {
+			name: 1,
+	        'websites.$' : 1
+		}, function(err, userWebs){
+
+			if(err){
+	            return next(err);
+	        }
+
+			res.render('websites/forms', {
+				error: '',
+				current: 'websites',
+				user: user,
+				selWebsite: domain,
+				website: userWebs.websites[0]
+			});
+
+		});
+
+	});
+
+});
+
+mainRoutes.get('/websites/forms/:domain/new', mid.loginRequired, function(req, res){
+
+	const domain = req.params.domain;
+
+	User.findById(req.session.userId, function(err, user){
+
+        if(err){
+            return next(err);
+        }
+
+        User.findOne({
+			_id: req.session.userId, 
+			'websites.domain': domain
+		}, {
+			name: 1,
+	        'websites.$' : 1
+		}, function(err, userWebs){
+
+			if(err){
+	            return next(err);
+	        }
+
+	        res.render('websites/new_form', {
+				error: '',
+				current: 'websites',
+				user: user,
+				selWebsite: domain,
+				website: userWebs.websites[0]
+			});
+
+		});
+
+    });
 
 });
 
@@ -319,8 +388,38 @@ mainRoutes.get('/dashboard', mid.loginRequired, function(req, res){
 		res.render('dashboard', {
 			error: '',
 			current: 'dashboard',
-			user: user
+			user: user,
+			tracking_code: helpers.getTrackingCode(req.get('host'), user.apikey)
 		});
+
+	});
+
+});
+
+mainRoutes.get('/blocked-devices', mid.loginRequired, function(req, res){
+
+	let deviceBlocked = false;
+
+	User.findById(req.session.userId, function(err, user){
+
+        if(err){
+            return next(err);
+        }
+
+        ExcludedDevice.find({userId: req.session.userId}, function(err, blockedDevices){
+
+        	if(err){
+	            return next(err);
+	        }
+
+        	res.render('blocked_devices', {
+				error: '',
+				current: 'blocked_devices',
+				user: user,
+				blockedDevices: blockedDevices
+			});
+
+        });
 
 	});
 

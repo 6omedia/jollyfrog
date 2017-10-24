@@ -38,8 +38,6 @@ var PopUp = (function(){
 
 		popUp(message, customform){
 
-			console.log('doe it');
-
 			const thisClass = this;
 
 			let modal = $('<div>', {"class": "c_modal"});
@@ -73,7 +71,7 @@ var PopUp = (function(){
 
 			$('.c_modal').on('click', function(e){
 
-				if($(e.target).is('.box') || $(e.target).is('button') || $(e.target).is('input')){
+		  		if(!$(e.target).is('.c_modal')){
 		            e.preventDefault();
 		            return;
 		        }

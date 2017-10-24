@@ -38,7 +38,7 @@ function jsonLoginRequired(req, res, next){
     if(req.session && req.session.userId) {
         return next();
     }
-    res.status(403);
+    res.status(401);
     return res.json({error: 'unauthorized'});
 }
 
@@ -80,7 +80,37 @@ function apiKeyRequired(req, res, next){
 
 }
 
+function jsonLoginOrApi(req, res, next){
+
+    if(req.session && req.session.userId) {
+        return next();
+    }
+
+    User.findOne({apikey: req.query.apikey}, function(err, user){
+
+        if(err){
+            return next(err);
+        }
+
+        if(!user){
+            res.status(403);
+            return res.json({
+                error: {
+                    message: 'Incorrect API Key',
+                    status: 403
+                }
+            });
+        }
+
+        res.locals.user = user;
+        return next();
+
+    });
+
+}
+
 module.exports.loggedIn = loggedIn;
 module.exports.loginRequired = loginRequired;
 module.exports.jsonLoginRequired = jsonLoginRequired;
 module.exports.apiKeyRequired = apiKeyRequired;
+module.exports.jsonLoginOrApi = jsonLoginOrApi;

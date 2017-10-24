@@ -18,12 +18,50 @@ ul {
     float: right;
 }
 
+.x {
+    float: right;
+    background: #959595;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    text-align: center;
+    border-radius: 100%;
+    line-height: 1em;
+    margin-top: 2px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.x:hover {
+    background: #000;
+}
+
 /* FORM ELEMENTS */
 
 .btn {
     background: #387395;
     color: #e0f4ff;
     cursor: pointer;
+}
+
+.invalid {
+    border: solid 2px #c93838 !important;
+}
+
+.messageBox {
+    position: absolute;
+    top: 0px;
+    background: #fff;
+    width: 100%;
+    left: 0px;
+    text-align: center;
+    padding: 10px 0px;
+    border-top: solid;
+    color: green;
+}
+
+.messageBox.error {
+
 }
 
 .side_menu {
@@ -138,7 +176,7 @@ table tr:nth-child(even){
 }
 
 .darkCont p {
-    color: #cfcfcf;
+    color: #434343;
 }
 
 .darkCont h1 {
@@ -206,6 +244,12 @@ table tr:nth-child(even){
     margin-top: 40px;
     text-align: left;
     overflow: hidden;
+    position: relative;
+}
+
+.grey {
+    background: #f4f4f4;
+    color: #444;
 }
 
 .error {
@@ -219,6 +263,7 @@ table tr:nth-child(even){
     padding: 10px;
     border: solid 1px #bed0c3;
     margin: 0px 15px 15px 0px;
+    vertical-align: text-top;
 }
 
 .panspin {
@@ -305,6 +350,8 @@ a.current {
 .main_bit {
     width: 78%;
     float: right;
+    background: #f4f4f4;
+    padding: 20px 0px 0px 0px;
 }
 
 .theSide .websites {
@@ -325,6 +372,7 @@ a.current {
     height: 100%;
     background: rgba(255, 255, 255, 0.9) url(../img/spin.gif) no-repeat 50% 125px;
     background-size: 32px;
+    z-index: 1;
 }
 
 table.spinning::before {
@@ -339,6 +387,10 @@ table.spinning::before {
     border-top: solid 2px;
 }
 
+.websites ul li.selected {
+    background: linear-gradient(#feffbf, #fff);
+}
+
 /*.theSide .websites ul li {
     background: linear-gradient(#e8ecfe, rgba(255, 255, 255, 0));
     padding: 10px;
@@ -351,7 +403,6 @@ table.spinning::before {
 }
 
 .statsCont {
-    background: #f0fff4;
     background: #f4f4f4;
     overflow: hidden;
 }
@@ -404,6 +455,11 @@ table.spinning::before {
     height: 16px;
     margin-left: 10px;
     cursor: pointer;
+}
+
+.actions .forms {
+    background: url(../img/forms.png) no-repeat 50%;
+    background-size: 100%;
 }
 
 .actions .stats {
@@ -493,9 +549,10 @@ table.spinning::before {
 .c_modal .box {
     background: #fff;
     padding: 25px;
-    width: 365px;
+    min-width: 365px;
     text-align: center;
     margin: 85px auto;
+    max-width: 670px;
 }
 
 .c_modal button {
@@ -526,4 +583,172 @@ table.spinning::before {
 
 .filters li.current {
     font-weight: bold;
+}
+
+.sideList {
+    background: #fff;
+    box-shadow: 7px 0px 15px 0px rgba(0, 0, 0, 0.18);
+    height: 100%;
+    padding: 20px;
+}
+
+.sideList ul li {
+    border-bottom: solid 1px #ccc;
+    padding: 5px 0px;
+}
+
+.sideList ul li:last-child {
+    border-bottom: none;
+}
+
+.sideList ul li span {
+    display: inline-block;
+}
+
+.main_bit input {
+    margin-bottom: 20px;
+    padding: 5px 10px;
+}
+
+#deviceNameInput {
+    display: block;
+}
+
+/* Forms */
+
+.aForm {
+    width: 285px;
+    background: #fff;
+    box-shadow: 2px 4px 8px #ececec;
+    height: 285px;
+    padding: 10px;
+    float: left;
+    margin-right: 20px;
+    margin-top: 20px;
+    /*overflow: hidden;*/
+    position: relative;
+}
+
+.aForm .actions {
+    position: absolute;
+    bottom: 0px;
+}
+
+.aForm .actions li {
+    display: inline-block;
+    padding: 10px 24px;
+    border: none;
+}
+
+.aForm .actions a,
+.aForm .actions span {
+    cursor: pointer;
+}
+
+.aForm .more {
+    display: inline-block;
+    width: 100%;
+}
+
+.aForm h3 {
+    font-size: 22px;
+    border-bottom: solid 2px #387395;
+    padding: 0px 5px 5px 0px;
+    margin-bottom: 0px;
+}
+
+.aForm ul li {
+    border-bottom: solid 1px #ddd;
+    padding: 10px 0px;
+}
+
+.aForm ul li p {
+    margin: 0px;
+}
+
+.aForm.new {
+    background: url(../img/plus.png) no-repeat 50%, linear-gradient(#e7e7e7, #c0c0c0);
+    cursor: pointer;
+}
+
+.aForm.new:hover {
+    background: url(../img/plus.png) no-repeat 50%, #ccc;
+}
+
+.aForm .x {
+    position: absolute;
+    top: -12px;
+    right: -10px;
+}
+
+.newForm {
+    background: #c7ced3;
+    width: 530px;
+    float: left;
+    margin-right: 20px;
+    padding: 15px;
+    margin-top: 10px;
+    position: relative;
+}
+
+.newForm li {
+    padding: 10px 20px;
+    border-top: solid 2px;
+    margin-bottom: 10px;
+    background: #b5c2cb;
+    position: relative;
+}
+
+.newForm .x {
+    position: absolute;
+    top: -12px;
+    right: -7px;
+    background: #000;
+}
+
+.newForm label {
+    width: 200px;
+}
+
+.newForm input {
+    clear: both;
+    margin-bottom: 0px;
+    width: 240px;
+}
+
+.addField {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.addField span {
+    background: #387395;
+    color: #fff;
+    display: inline-block;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: 23px;
+    line-height: 0.7em;
+}
+
+.input_required {
+    vertical-align: middle;
+    width: 15px;
+    height: 15px;
+}
+
+/* Dashboard */
+
+#tracking_code {
+    width: 600px;
+}
+
+#tracking_code code {
+    color: #275481;
+    background-color: #e8f3ff;
+    display: inline-block;
+    word-break: break-all;
 }

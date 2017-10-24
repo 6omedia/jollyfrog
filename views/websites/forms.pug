@@ -1,0 +1,25 @@
+extends websites_layout
+
+block content
+	h2 #{website.name} 
+		span > Forms
+	a(href=`${website.domain}`)#theDomain #{website.domain}
+	
+	.webForms(data-domain=`${website.domain}`)
+		a(href=`/websites/forms/${website.domain}/new`).aForm.new
+		each form in website.forms
+			.aForm(data-formid=`${form._id}`)
+				h3 #{form.name}
+				p Submit Button ID: #{form.submit_id}
+				ul.list
+					each field in form.fields
+						li
+							p #{field.name}
+							p.id ID: #{field.field_id}
+				ul.actions
+					li
+						a.more Edit Form
+					li
+						span.code Generate Code
+
+				.x x

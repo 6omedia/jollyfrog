@@ -1,0 +1,29 @@
+[
+	{
+		"userId": "yeah",
+		"fingerprint": 12345,
+	    "device_name": "Bobs Mobile"
+	},
+	{
+		"userId": "yeah",
+		"fingerprint": 67890,
+	    "device_name": "Bobs Laptop"
+	},
+	{
+		"fingerprint": 34342,
+	    "device_name": "Franks Tablet"
+	},
+	{
+		"userId": "yeah",
+		"fingerprint": 44444,
+	    "device_name": "Marks Mobile"
+	},
+	{
+		"fingerprint": 5656565,
+	    "device_name": "Jones Laptop"
+	},
+	{
+		"fingerprint": 756766,
+	    "device_name": "Sallys Tablet"
+	}
+]

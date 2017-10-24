@@ -1,0 +1,44 @@
+extends websites_layout
+
+block content
+	.stats
+		.header
+			h2 #{website.name} 
+				span > Stats
+			a(href="")#theDomain #{website.domain}
+			ul.list.filters
+				li.current All
+				li Awareness
+				li Research
+				li Comparison
+				li Purchase
+		.box.pageviews
+			h4 Page Views
+			table
+				tr
+					th.thUrl Page URL
+					th Date
+					th IP
+					th Browser
+					th TimeZone
+				each stat in stats.pageviews
+					tr
+						td.thUrl #{stat.data_point.value}
+						td #{stat.display_date}
+						td #{stat.ip}
+						td #{stat.browser}
+						td #{stat.timezone}
+		.box.uniquedevices
+			h4 Unique Devices
+			table
+				tr
+					th Finger Print
+					th Type
+					th Vendor
+					th Operating System
+				each stat in stats.devices
+					tr
+						td #{stat.fingerprint}
+						td #{stat.type}
+						td #{stat.vendor}
+						td #{stat.os}

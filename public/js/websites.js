@@ -4,6 +4,7 @@
 		this.domain = '';
 		this.websites = [];
 		this.currentFpFiler = 'All';
+		this.form = {};
 	}
 	Model.prototype.addWebsite = function(name, domain, callback){
 		var thisModel = this;
@@ -161,6 +162,8 @@
 		var view = new View();
 		var model = new Model({});
 
+		this.updateModelFromView();
+
 		/*** events ***/
 
 		$('.btn_openform').on('click', function(){
@@ -233,6 +236,19 @@
 
 	Websites.prototype.updateModelFromView = function() {
 		
+		// var modelForm = this.model.form;
+
+		// if($('.aFormBox').length){
+		// 	var formFieldLis = $('#formFields li');
+		// 	this.model.form.name = $('#q_formname').val();
+			
+		// 	for(i=0; i<formFieldLis.length; i++){
+
+		// 		var li = formFieldLis[i];
+		// 		modelForm.fields.push();
+		// 	}
+		// }
+
 	};
 
 	var websites = new Websites(Model, View);

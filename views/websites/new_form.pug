@@ -1,0 +1,29 @@
+extends websites_layout
+
+block content
+	h2 #{website.name} 
+		span > Forms
+	a(href=`${website.domain}`)#theDomain #{website.domain}
+
+	div
+		.aFormBox.newForm(data-domain=`${website.domain}`)
+			h1 New Form
+			label Name of the form
+			input(type="text")#q_formname
+			label Submit Button ID
+			input(type="text")#q_submit_id
+			hr
+			ul#formFields
+				li
+					.x x
+					label Field Name (Data point)
+					input(type="text", class="input_datapoint")
+					br
+					label Input ID
+					input(type="text", class="input_id")
+					br
+					label Required
+					input(type="checkbox", class="input_required")
+			.addField Add Field 
+				span +
+			.btn#add_form Add Form to #{website.domain}

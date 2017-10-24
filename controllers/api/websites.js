@@ -48,7 +48,7 @@ websitesRoutes.post('/add', mid.jsonLoginRequired, function(req, res){
 
 		}
 
-		User.findOneAndUpdate({email: user.email, 'websites.domain': { '$ne': req.body.domain }}, {
+		User.findOneAndUpdate({email: user.email, 'websites.domain': {'$ne': req.body.domain }}, {
 			$push: {
 				websites: {
 					name: req.body.name,

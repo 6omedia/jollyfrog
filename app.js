@@ -100,6 +100,14 @@ app.use('/api/websites', webApiRoutes);
 var dashboardApiRoutes = require('./controllers/api/dashboard.js');
 app.use('/api/dashboard', dashboardApiRoutes);
 
+// api routes
+var blockedDevicesApiRoutes = require('./controllers/api/blocked_devices.js');
+app.use('/api/blocked-devices', blockedDevicesApiRoutes);
+
+// api routes
+var formsApiRoutes = require('./controllers/api/forms.js');
+app.use('/api/forms', formsApiRoutes);
+
 app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
 	return res.json({

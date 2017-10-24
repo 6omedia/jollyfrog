@@ -1,4 +1,5 @@
 var Device = require('./device.js');
+const ExcludedDevice = require('./excluded_device');
 var moment = require('moment');
 
 var mongoose = require('mongoose');
@@ -23,45 +24,62 @@ var EntrySchema = new mongoose.Schema({
 
 EntrySchema.statics.getPageViews = function(userId, domain, fromDate, toDate, fp, callback){
 
-	let query = {
-		'userId': userId,
-		'domain': domain,
-		'data_point.name': 'page view'
-	};
-
-	if(fp != '' && fp != 'All'){
-		query['meta.funnel_position'] = fp.toLowerCase();
-	}
-
-	let selected = {
-		browser: true,
-		ip: true,
-		timezone: true,
-		date: true,
-		data_point: true
-	};
-
-	Entry.find(query).select(selected).sort({date: -1}).lean().limit(30).exec(function(err, pageViews){
+	ExcludedDevice.find({userId: userId}).select({fingerprint: true}).exec(function(err, exDevs){
 
 		if(err){
 			return callback(err, null);
 		}
 
-		for(i=0; i<pageViews.length; i++){
+		let exDevsArr = [];
 
-			let urlParts = pageViews[i].data_point.value.split('/');
-			let url = '';
-
-			for(j=3; j<urlParts.length; j++){
-				url += '/' + urlParts[j];
-			}
-
-			pageViews[i].data_point.value = url;
-			pageViews[i].display_date = moment(pageViews[i].date).format("MMM Do YY");
-
+		for(i=0; i<exDevs.length; i++){
+			exDevsArr.push(exDevs[i].fingerprint);
 		}
 
-		return callback(null, pageViews);
+		let query = {
+			'userId': userId,
+			'domain': domain,
+			'data_point.name': 'page view',
+			'device': {
+				"$nin": exDevsArr
+			}
+		};
+
+		if(fp != '' && fp != 'All'){
+			query['meta.funnel_position'] = fp.toLowerCase();
+		}
+
+		let selected = {
+			browser: true,
+			ip: true,
+			timezone: true,
+			date: true,
+			data_point: true
+		};
+
+		Entry.find(query).select(selected).sort({date: -1}).lean().limit(30).exec(function(err, pageViews){
+
+			if(err){
+				return callback(err, null);
+			}
+
+			for(i=0; i<pageViews.length; i++){
+
+				let urlParts = pageViews[i].data_point.value.split('/');
+				let url = '';
+
+				for(j=3; j<urlParts.length; j++){
+					url += '/' + urlParts[j];
+				}
+
+				pageViews[i].data_point.value = url;
+				pageViews[i].display_date = moment(pageViews[i].date).format("MMM Do YY");
+
+			}
+
+			return callback(null, pageViews);
+
+		});
 
 	});
 
@@ -73,8 +91,6 @@ EntrySchema.statics.getDevices = function(userId, domain, fromDate, toDate, fp, 
 		'userId': userId,
 		'domain': domain
 	};
-
-	//console.log(fp, ' ', fp != '' && fp != 'All');
 
 	if(fp != '' && fp != 'All'){
 		query['meta.funnel_position'] = fp.toLowerCase();

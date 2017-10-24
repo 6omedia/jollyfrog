@@ -1,0 +1,31 @@
+extends layout
+
+block content
+
+	include ./partials/nav
+
+	.darkCont#blocked_devices_page
+
+		h1 Blocked Devices
+
+		.theContainer.grey.spinning
+			.theSide
+				.sideList
+					h2 Blocked Devices
+					ul.list#blockedDevices_list
+						each device in blockedDevices
+							li(data-fingerprint=`${device.fingerprint}`)
+								span #{device.device_name}
+								span.x x
+
+			.main_bit
+				//- h2 34 Devices Blocked
+				//- p to block a device visit this page on that device and login
+				//- input(type="text", placeholder="Give this device a name...")
+				//- br
+				//- .btn Block This Device
+
+	script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")
+	script(src="https://clientjs.org/js/client.min.js")
+	script(src="/static/js/popup.js")
+	script(src="/static/js/blocked_devices.js")

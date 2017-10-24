@@ -17,26 +17,17 @@ block content
 					.btn#genApiKey Generate API key
 				else
 					.btn#genNewApiKey Generate New API key
-			.panel.websites
-				//- h2 Websites
-				//- ul
-				//- 	li Makeup Tuts
-				//- 		span x
-				//- 	li 6oMedia
-				//- 		span x
-				//- 	li FxOptions Pro
-				//- 		span x
-				//- 	li FozzleHut
-				//- 		span x
-				//- .addNew
-				//- 	h3 Add Website
-				//- 	.form
-				//- 		label Website name
-				//- 		input(type="text")
-				//- 		label Website domain
-				//- 		input(type="text")
-				//- 		.spin#spin_addws
-				//- 		.btnStyle Add
+			.panel#tracking_code
+				h2 Tracking Code
+				p Include both...
+				code https://clientjs.org/js/client.min.js
+				br
+				code http://eveningbastion.6omedia.co.uk/static/js/jollyfrog.min.js
+				br
+				br
+				p and then add the tracking code in the head after those scripts
+				code #{tracking_code}
+
 	script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")
 	script(src="/static/js/popup.js")
 	script(src="/static/js/dashboard.js")

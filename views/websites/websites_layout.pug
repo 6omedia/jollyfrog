@@ -1,0 +1,19 @@
+include ../partials/head
+	
+body
+	include ../partials/nav
+	.darkCont
+		h1 Websites
+
+		.theContainer
+			.statsCont
+				.theSide
+					include side
+
+				.main_bit
+					block content
+
+	script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")
+	script(src="/static/js/popup.js")
+	script(src="/static/js/websites.js")
+	script(src="/static/js/forms.js")

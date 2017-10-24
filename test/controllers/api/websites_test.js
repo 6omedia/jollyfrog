@@ -4,6 +4,7 @@ let mongoose = require("mongoose");
 let User = require('../../../models/user');
 let Entry = require('../../../models/entry');
 let Device = require('../../../models/device');
+// let Website = require('../../../models/website');
 
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -32,6 +33,8 @@ function logMarkIn(callback){
 
 describe('website api routes', () => {
 
+	let theUserId = '';
+
 	before(function(done){
 		User.remove({}, function(){
 			User.create({
@@ -43,6 +46,7 @@ describe('website api routes', () => {
 	        	if(err){
 	        		console.log(err);
 	        	}
+	        	theUserId = user._id;
 	        	done();
 	        });
 		});
@@ -50,37 +54,19 @@ describe('website api routes', () => {
 
 	describe('POST /add', () => {
 
-		// beforeEach(function(done){
-		// 	User.findOneAndUpdate({email: 'mark@mark.com'}, {new: true}, {
-		// 		$push: {
-		// 			websites: {
-		// 				name: 'yeah',
-		// 				domain: 'yeah.co.uk'
-		// 			}
-		// 		}
-		// 	}, function(err, user){
-		// 		if(!err){
-		// 			done();
-		// 		}
-		// 		else{
-		// 			console.log(err);
-		// 		}
-		// 	});
-		// });
-
 		afterEach(function(done){
 			User.update({'email': 'mark@mark.com'}, {
 				$set: {
 					websites: []
 				}
 			}, function(err, affectedObj){
-				
+					
 				done();
 				
 			});
 		});
 
-		it('should return 403 as no one is logged in', (done) => {
+		it('should return 401 as no one is logged in', (done) => {
 
 			chai.request(server)
                 .post('/api/websites/add')
@@ -89,7 +75,7 @@ describe('website api routes', () => {
                 	domain: 'things.com'
                 })
                 .end((err, res) => {
-                    res.should.have.status(403);
+                    res.should.have.status(401);
                     done();
                 }); 
 
@@ -136,9 +122,9 @@ describe('website api routes', () => {
 			User.findOneAndUpdate({email: 'mark@mark.com'}, {
 				$push: {
 					websites: {
-						name: 'yeah',
+	                	name: 'hmmm',
 						domain: 'yeah.co.uk'
-					}
+	                }
 				}
 			}, {new: true}, function(err, user){
 				if(!err){
@@ -221,7 +207,7 @@ describe('website api routes', () => {
 			});
 		});
 
-		it('should return 403 as no one is logged in', (done) => {
+		it('should return 401 as no one is logged in', (done) => {
 
 			chai.request(server)
                 .post('/api/websites/edit/hmmm.com')
@@ -230,7 +216,7 @@ describe('website api routes', () => {
                 	domain: 'things.com'
                 })
                 .end((err, res) => {
-                    res.should.have.status(403);
+                    res.should.have.status(401);
                     done();
                 }); 
 
@@ -327,12 +313,12 @@ describe('website api routes', () => {
 			});
 		});
 
-		it('should return 403 as no one is logged in', (done) => {
+		it('should return 401 as no one is logged in', (done) => {
 
 			chai.request(server)
                 .delete('/api/websites/yeah.co.uk')
                 .end((err, res) => {
-                    res.should.have.status(403);
+                    res.should.have.status(401);
                     done();
                 }); 
 
@@ -403,12 +389,12 @@ describe('website api routes', () => {
 			});
 		});
 
-		it('should return 403 as no one is logged in', (done) => {
+		it('should return 401 as no one is logged in', (done) => {
 
 			chai.request(server)
                 .get('/api/websites/yeah.co.uk/stats')
                 .end((err, res) => {
-                    res.should.have.status(403);
+                    res.should.have.status(401);
                     done();
                 }); 
 

@@ -54,40 +54,28 @@ trackingRoutes.post('/log_page_view', mid.apiKeyRequired, function(req, res){
 			return res.json(data);
 		}
 
-		Device.findOne({fingerprint: req.body.fingerprint}, function(err, device){
+		var deviceObj = {
+			fingerprint: req.body.fingerprint,
+			type: req.body.type,
+			vendor: req.body.vendor,
+			os: req.body.os,
+			screen: {
+				res: req.body.res,
+				colorDepth: req.body.colorDepth
+			}
+		};
+
+		Device.addDeviceIfNew(deviceObj, function(err, device){
 
 			if(err){
 				res.status(err.status || 500);
-				data.error = err;
-				return res.json(data);
+	            data.error = err;
+	            return res.json(data);
 			}
 
-			if(!device){
-
-				Device.create({
-					fingerprint: req.body.fingerprint,
-				    type: req.body.type,
-				    vendor: req.body.vendor,
-				    os: req.body.os,
-				    screen: {
-				        res: req.body.screen.res,
-				        colorDepth: req.body.colorDepth
-				    }
-				}, function(err, device){
-
-					if(err){
-						res.status(err.status || 500);
-						data.error = err;
-						return res.json(data);
-					}
-
-					res.status(200);
-					data.success = 'Successfull Entry';
-					return res.json(data);
-
-				});
-
-			}
+			res.status(200);
+            data.success = 'Successfull Entry';
+            return res.json(data);
 
 		});
 
@@ -119,7 +107,7 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
      req.socket.remoteAddress ||
      req.connection.socket.remoteAddress;
 
-    const dataPoints = JSON.parse(req.body.datapoints);
+    const dataPoints = req.body.datapoints;
 
     async.each(dataPoints, function(dataPoint, callback){
 
@@ -136,9 +124,7 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
 				name: dataPoint.name,
 				value: dataPoint.value
 			},
-			meta: {
-				form: req.body.form_name
-			}
+			meta: req.body.meta || {}
 		}, function(err, entry){
 
 			if(err){
@@ -198,8 +184,8 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
 
 });
 
-trackingRoutes.post('/log_click', mid.apiKeyRequired, function(req, res){
+// trackingRoutes.post('/log_click', mid.apiKeyRequired, function(req, res){
 
-});
+// });
 
 module.exports = trackingRoutes;
