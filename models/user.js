@@ -4,24 +4,6 @@ const bcrypt = require('bcrypt');
 const Cryptr = require('cryptr'),
     cryptr = new Cryptr('yeahLikehmmandSTUfF');
 
-let FormSchema = new Schema({
-    name: String,
-    fields: Array,
-    submit_id: {
-        type: String,
-        default: 'none'
-    }
-});
-
-let WebsiteSchema = new Schema({
-    name: String,
-    domain: {
-        type: String,
-        unique: true
-    },
-    forms: [FormSchema]
-});
-
 //book schema definition
 let UserSchema = new Schema(
     {
@@ -35,7 +17,10 @@ let UserSchema = new Schema(
           type: Boolean,
           default: false
         },
-        websites: [WebsiteSchema],
+        websites: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Website'
+        }],
         apikey: {
             type: String,
             unique: true,

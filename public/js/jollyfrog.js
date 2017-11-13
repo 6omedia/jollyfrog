@@ -98,7 +98,8 @@ JFrog.prototype.doIt = function(apiKey, c){
         language: c.getLanguage(),
         meta: {
             funnel_position: document.getElementById('tracking_info').dataset.funnel_position || ''
-        }
+        },
+        referer: document.referrer
     };
 
 	// add page view

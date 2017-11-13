@@ -2,6 +2,9 @@ var express = require('express');
 var session = require('express-session');
 var app = express();
 let mongoose = require('mongoose');
+
+mongoose.Promise = global.Promise;
+
 var MongoStore = require('connect-mongo')(session);
 let bodyParser = require('body-parser');
 var config = '';
@@ -14,7 +17,7 @@ if(process.env.NODE_ENV == 'test'){
 	config = require('./config/dev.json');
 }
 
-let options = { 
+let options = {
 	server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
 	replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } 
 };
@@ -59,7 +62,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 
 app.use(session({
 	secret: 'hhhmmmm',
-	resave: true,
+	resave: false,
 	saveUninitialized: true,
 	store: new MongoStore({
         mongooseConnection: db

@@ -45,7 +45,8 @@ trackingRoutes.post('/log_page_view', mid.apiKeyRequired, function(req, res){
 			name: 'page view',
 			value: req.body.url
 		},
-		meta: req.body.meta || {}
+		meta: req.body.meta || {},
+		referer: req.body.referer || ''
 	}, function(err, entry){
 
 		if(err){
@@ -107,33 +108,39 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
      req.socket.remoteAddress ||
      req.connection.socket.remoteAddress;
 
-    const dataPoints = req.body.datapoints;
+    const dataPoints = JSON.parse(req.body.datapoints);
+    const dateNow = new Date();
 
-    async.each(dataPoints, function(dataPoint, callback){
+    let formEntries = [];
 
-    	Entry.create({
-			userId: user._id,
+    for(i=0; i<dataPoints.length; i++){
+
+    	let entry = new Entry({
+    		userId: user._id,
 			ip: ip,
 			device: req.body.fingerprint,
 			browser: req.body.browser,
 			timezone: req.body.timezone,
 			language: req.body.language,
-			date: new Date(),
+			form_name: req.body.form_name,
+			date: dateNow,
 			domain: req.body.domain,
 			data_point: {
-				name: dataPoint.name,
-				value: dataPoint.value
+				name: dataPoints[i].name,
+				value: dataPoints[i].value
 			},
-			meta: req.body.meta || {}
-		}, function(err, entry){
+			meta: req.body.meta || {},
+			referer: req.body.referer || ''
+    	});
 
-			if(err){
-				res.status(err.status || 500);
-				data.error = err;
-				return res.json(data);
-			}
+    	formEntries.push(entry.save());
 
-			Device.findOne({fingerprint: req.body.fingerprint}, function(err, device){
+    }
+
+    Promise.all(formEntries)
+    	.then((a) => {
+
+    		Device.findOne({fingerprint: req.body.fingerprint}, function(err, device){
 
 				if(err){
 					res.status(err.status || 500);
@@ -160,27 +167,121 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
 							return res.json(data);
 						}
 
-						callback();
-
 						res.status(200);
 						data.success = 'Successfull Entry';
 						return res.json(data);
 
 					});
 
-				}else{
-					callback();
 				}
 
 			});
 
-		});
+    		res.status(200);
+			data.success = 'Successfull Entry';
+			return res.json(data);
 
-    });
+    	})
+    	.catch((err) => {
 
-    res.status(200);
-	data.success = 'Successfull Entry';
-	return res.json(data);
+    		if(err){
+				res.status(err.status || 500);
+	            data.error = err;
+	            return res.json(data);
+			}
+
+    	});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //   async.each(dataPoints, function(dataPoint, callback){
+
+  //   	Entry.create({
+		// 	userId: user._id,
+		// 	ip: ip,
+		// 	device: req.body.fingerprint,
+		// 	browser: req.body.browser,
+		// 	timezone: req.body.timezone,
+		// 	language: req.body.language,
+		// 	form_name: req.body.form_name,
+		// 	date: dateNow,
+		// 	domain: req.body.domain,
+		// 	data_point: {
+		// 		name: dataPoint.name,
+		// 		value: dataPoint.value
+		// 	},
+		// 	meta: req.body.meta || {},
+		// 	referer: req.body.referer || ''
+		// }, function(err, entry){
+
+		// 	if(err){
+		// 		res.status(err.status || 500);
+		// 		data.error = err;
+		// 		return res.json(data);
+		// 	}
+
+		// 	Device.findOne({fingerprint: req.body.fingerprint}, function(err, device){
+
+		// 		if(err){
+		// 			res.status(err.status || 500);
+		// 			data.error = err;
+		// 			return res.json(data);
+		// 		}
+
+		// 		if(!device){
+
+		// 			Device.create({
+		// 				fingerprint: req.body.fingerprint,
+		// 			    type: req.body.type,
+		// 			    vendor: req.body.vendor,
+		// 			    os: req.body.os,
+		// 			    screen: {
+		// 			        res: req.body.screen.res,
+		// 			        colorDepth: req.body.colorDepth
+		// 			    }
+		// 			}, function(err, device){
+
+		// 				if(err){
+		// 					res.status(err.status || 500);
+		// 					data.error = err;
+		// 					return res.json(data);
+		// 				}
+
+		// 				callback();
+
+		// 				res.status(200);
+		// 				data.success = 'Successfull Entry';
+		// 				return res.json(data);
+
+		// 			});
+
+		// 		}else{
+		// 			callback();
+		// 		}
+
+		// 	});
+
+		// });
+
+  //   });
+
+ //    res.status(200);
+	// data.success = 'Successfull Entry';
+	// return res.json(data);
 
 });
 

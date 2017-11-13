@@ -1,9 +1,10 @@
 
 // api
+
 // var tracking = require('./controllers/api/tracking_test.js');
-// var websites_api_controller = require('./controllers/api/websites_test.js');
+var websites_api_controller = require('./controllers/api/websites_test.js');
 // var excludedDevices_api_controller = require('./controllers/api/blockedfps_testing.js');
-var forms_api_controller = require('./controllers/api/forms_tests.js');
+// var forms_api_controller = require('./controllers/api/forms_tests.js');
 
 // controllers
 

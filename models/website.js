@@ -1,5 +1,7 @@
-var mongoose = require('mongoose');
-var WebsiteSchema = new mongoose.Schema(
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+var WebsiteSchema = new Schema(
 	{
 		userId: {
 			type: Schema.Types.ObjectId,
@@ -13,7 +15,11 @@ var WebsiteSchema = new mongoose.Schema(
         },
 	    forms: [{
             type: Schema.Types.ObjectId, 
-            ref: 'Form' 
+            ref: 'Form'
+        }],
+        campaigns: [{
+            type: Schema.Types.ObjectId, 
+            ref: 'Campaign'
         }]
 	}
 );

@@ -4,7 +4,7 @@ let mongoose = require("mongoose");
 let User = require('../../../models/user');
 let Entry = require('../../../models/entry');
 let Device = require('../../../models/device');
-// let Website = require('../../../models/website');
+let Website = require('../../../models/website');
 
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -60,8 +60,10 @@ describe('website api routes', () => {
 					websites: []
 				}
 			}, function(err, affectedObj){
-					
-				done();
+				
+				Website.remove({}, function(){
+					done();
+				});
 				
 			});
 		});
@@ -119,36 +121,44 @@ describe('website api routes', () => {
 
 		it('should return 409 as website already exists with that domain', (done) => {
 			
-			User.findOneAndUpdate({email: 'mark@mark.com'}, {
-				$push: {
-					websites: {
-	                	name: 'hmmm',
-						domain: 'yeah.co.uk'
-	                }
-				}
-			}, {new: true}, function(err, user){
-				if(!err){
-					
-					logMarkIn(function(agent){
+			let theWebsite = new Website({
+				userId: theUserId,
+            	name: 'hmmm',
+				domain: 'yeah.co.uk'
+			});
 
-						agent.post('/api/websites/add')
-			                .send({
-			                	name: 'hmmm',
-								domain: 'yeah.co.uk'
-			                })
-			                .end((err, res) => {
-			                    res.should.have.status(409);
-			                    res.body.error.should.equal('Domain already exists');
-			                    done();
-			                }); 
+			theWebsite.save()
+				.then((webs) => {
 
+					User.findOneAndUpdate({email: 'mark@mark.com'}, {
+						$push: {
+							websites: theWebsite
+						}
+					}, {new: true}, function(err, user){
+						if(!err){
+							
+							logMarkIn(function(agent){
+
+								agent.post('/api/websites/add')
+					                .send({
+					                	name: 'hmmm',
+										domain: 'yeah.co.uk'
+					                })
+					                .end((err, res) => {
+					                    res.should.have.status(409);
+					                    res.body.error.should.equal('A website with that domain already exists');
+					                    done();
+					                });
+
+							});
+
+						}
+						else{
+							console.log(err);
+						}
 					});
 
-				}
-				else{
-					console.log(err);
-				}
-			});
+				});
 
 		});
 
@@ -162,9 +172,9 @@ describe('website api routes', () => {
 	                	domain: 'things.com'
 	                })
 	                .end((err, res) => {
-	                    User.findOne({email: 'mark@mark.com'}, function(err, user){
+	                    Website.findOne({userId: theUserId}, function(err, website){
 	                    	// console.log('HERE ', user);
-	                    	user.websites[0].name.should.equal('Things');
+	                    	website.name.should.equal('Things');
 	                    	done();
 	                    });
 	                });
@@ -177,22 +187,19 @@ describe('website api routes', () => {
 
 	describe('POST /edit/:domain', () => {
 
-		beforeEach(function(done){
-			User.findOneAndUpdate({email: 'mark@mark.com'}, {
-				$push: {
-					websites: {
-						name: 'yeah',
-						domain: 'yeah.co.uk'
-					}
-				}
-			}, {new: true}, function(err, user){
-				if(!err){
-					done();
-				}
-				else{
-					console.log(err);
-				}
+		beforeEach((done) => {
+			
+			const yeahWebsite = new Website({
+				userId: theUserId,
+				name: 'yeah',
+				domain: 'yeah.co.uk'
 			});
+
+			yeahWebsite.save()
+				.then(() => {
+					done();
+				});
+
 		});
 
 		afterEach(function(done){
@@ -202,7 +209,9 @@ describe('website api routes', () => {
 				}
 			}, function(err, affectedObj){
 				
-				done();
+				Website.remove({}, function(){
+					done();
+				});
 				
 			});
 		});
@@ -250,7 +259,7 @@ describe('website api routes', () => {
 	                	domain: 'newsite.com'
 	                })
 	                .end((err, res) => {
-	                	console.log(res.body);
+	                	// console.log(res.body);
 	                    res.should.have.status(200);
 	                    done();
 	                }); 
@@ -269,8 +278,9 @@ describe('website api routes', () => {
 	                	domain: 'newsite.com'
 	                })
 	                .end((err, res) => {
-	                    User.findOne({email: 'mark@mark.com'}, function(err, user){
-	                    	user.websites[0].name.should.equal('Things and Stuff');
+	                    Website.findOne({userId: theUserId}, function(err, website){
+	                    	// console.log('HERE ', user);
+	                    	website.name.should.equal('Things and Stuff');
 	                    	done();
 	                    });
 	                }); 
@@ -284,21 +294,31 @@ describe('website api routes', () => {
 	describe('DELETE /:domain', () => {
 
 		beforeEach(function(done){
-			User.findOneAndUpdate({email: 'mark@mark.com'}, {new: true}, {
-				$push: {
-					websites: {
-						name: 'yeah',
-						domain: 'yeah.co.uk'
-					}
-				}
-			}, function(err, user){
-				if(!err){
-					done();
-				}
-				else{
-					console.log(err);
-				}
+
+			const yeahWebsite = new Website({
+				userId: theUserId,
+				name: 'yeah',
+				domain: 'yeah.co.uk'
 			});
+
+			yeahWebsite.save()
+				then(() => {
+
+					User.findOneAndUpdate({email: 'mark@mark.com'}, {new: true}, {
+						$push: {
+							websites: yeahWebsite
+						}
+					}, function(err, user){
+						if(!err){
+							done();
+						}
+						else{
+							console.log(err);
+						}
+					});
+					
+				});
+
 		});
 
 		afterEach(function(done){
@@ -308,7 +328,9 @@ describe('website api routes', () => {
 				}
 			}, function(err, affectedObj){
 				
-				done();
+				Website.remove({}, function(err){
+					done();
+				});
 				
 			});
 		});
@@ -345,9 +367,25 @@ describe('website api routes', () => {
 				agent.delete('/api/websites/yeah.co.uk')
 	                .end((err, res) => {
 	                    res.should.have.status(404);
-	                    User.findOne({email: 'mark@mark.com'}, function(err, user){
-	                    	user.websites.length.should.equal(0);
+	                    Website.findOne({userId: theUserId}, function(err, website){
+	                    	expect(website).to.be(null);
 	                    	done();
+	                    });
+	                });
+
+			});
+
+		});
+
+		it('website should not exist in users', (done) => { 
+
+			logMarkIn(function(agent){
+
+				agent.delete('/api/websites/yeah.co.uk')
+	                .end((err, res) => {
+	                    res.should.have.status(404);
+	                    User.findOne({'email': 'mark@mark.com'}, {
+	                    	
 	                    });
 	                });
 
@@ -359,13 +397,16 @@ describe('website api routes', () => {
 
 	describe('GET /:domain/stats', () => {
 
+		const yeahWebsite = new Website({
+			userId: theUserId,
+			name: 'yeah',
+			domain: 'yeah.co.uk'
+		});
+
 		beforeEach(function(done){
 			User.findOneAndUpdate({email: 'mark@mark.com'}, {
 				$push: {
-					websites: {
-						name: 'yeah',
-						domain: 'yeah.co.uk'
-					}
+					websites: yeahWebsite
 				}
 			}, function(err, user){
 				if(!err){

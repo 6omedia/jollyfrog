@@ -27,7 +27,7 @@ describe('tracking routes', () => {
 	            }
 	        }, function(err, user){
 	        	if(err){
-	        		console.log(err);
+	        		console.log('THIS ERR? ', err);
 	        	}
 	        	done();
 	        });
@@ -80,7 +80,7 @@ describe('tracking routes', () => {
                 .end((err, res) => {
                     res.should.have.status(400);
                     done();
-                });  
+                });
         });
 
         it('should return 403 as no api key is not found', (done) => {
@@ -361,7 +361,7 @@ describe('tracking routes', () => {
                     language: 'en-US'
                 })
                 .end((err, res) => {
-                    Entry.find({'meta.form': 'test form'}, function(err, entries){
+                    Entry.find({form_name: 'test form'}, function(err, entries){
                         entries.length.should.equal(3);
                         done();
                     });

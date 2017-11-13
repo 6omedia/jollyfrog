@@ -9,13 +9,13 @@ var FormFields = new mongoose.Schema(
 
 var FormSchema = new mongoose.Schema(
     {
-    	websiteId: {
-			type: Schema.Types.ObjectId,
-            ref: 'Website',
-            required: true
-        },
+    	websiteId: String,
         name: String,
-        fields: [FormFields]
+        fields: [FormFields],
+        submit_id: {
+            type: String,
+            default: 'none'
+        }
     }
 );
 

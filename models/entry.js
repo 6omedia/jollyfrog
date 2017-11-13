@@ -9,6 +9,7 @@ var EntrySchema = new mongoose.Schema({
 	device: Number,
 	browser: String,
 	timezone: String,
+	form_name: String,
     language: String,
 	date: {
 		type: Date
