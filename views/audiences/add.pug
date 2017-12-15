@@ -1,0 +1,25 @@
+extends audiences_layout
+
+block content
+	h2 Create a new Audience
+	.form#new_audience_form
+		ul
+			li
+				label.break Audience Name
+				input(type="text", placeholder="Name...")
+			li
+				label.break Domains
+				.like_input#domains 0 Domains
+				.multiple_select
+					each domain in websites
+						.aList
+							.checkBox
+							span #{domain.domain}
+
+			li
+				label.break Categories
+				.like_input#cats No Categories
+				.like_input.multiple_select
+					each domain in websites
+						label domain.co
+						input(type="checkbox")

@@ -108,9 +108,10 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
      req.socket.remoteAddress ||
      req.connection.socket.remoteAddress;
 
-    const dataPoints = JSON.parse(req.body.datapoints);
-    const dateNow = new Date();
+    // const dataPoints = JSON.parse(req.body.datapoints);
+    const dataPoints = req.body.datapoints;
 
+    const dateNow = new Date();
     let formEntries = [];
 
     for(i=0; i<dataPoints.length; i++){
@@ -191,97 +192,6 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
 			}
 
     	});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //   async.each(dataPoints, function(dataPoint, callback){
-
-  //   	Entry.create({
-		// 	userId: user._id,
-		// 	ip: ip,
-		// 	device: req.body.fingerprint,
-		// 	browser: req.body.browser,
-		// 	timezone: req.body.timezone,
-		// 	language: req.body.language,
-		// 	form_name: req.body.form_name,
-		// 	date: dateNow,
-		// 	domain: req.body.domain,
-		// 	data_point: {
-		// 		name: dataPoint.name,
-		// 		value: dataPoint.value
-		// 	},
-		// 	meta: req.body.meta || {},
-		// 	referer: req.body.referer || ''
-		// }, function(err, entry){
-
-		// 	if(err){
-		// 		res.status(err.status || 500);
-		// 		data.error = err;
-		// 		return res.json(data);
-		// 	}
-
-		// 	Device.findOne({fingerprint: req.body.fingerprint}, function(err, device){
-
-		// 		if(err){
-		// 			res.status(err.status || 500);
-		// 			data.error = err;
-		// 			return res.json(data);
-		// 		}
-
-		// 		if(!device){
-
-		// 			Device.create({
-		// 				fingerprint: req.body.fingerprint,
-		// 			    type: req.body.type,
-		// 			    vendor: req.body.vendor,
-		// 			    os: req.body.os,
-		// 			    screen: {
-		// 			        res: req.body.screen.res,
-		// 			        colorDepth: req.body.colorDepth
-		// 			    }
-		// 			}, function(err, device){
-
-		// 				if(err){
-		// 					res.status(err.status || 500);
-		// 					data.error = err;
-		// 					return res.json(data);
-		// 				}
-
-		// 				callback();
-
-		// 				res.status(200);
-		// 				data.success = 'Successfull Entry';
-		// 				return res.json(data);
-
-		// 			});
-
-		// 		}else{
-		// 			callback();
-		// 		}
-
-		// 	});
-
-		// });
-
-  //   });
-
- //    res.status(200);
-	// data.success = 'Successfull Entry';
-	// return res.json(data);
 
 });
 

@@ -1,4 +1,4 @@
-.websites
+.websites.side_shadow
 	h2 Your Websites
 	.btn.btn_openform Add Website
 	.form#new_website_form
@@ -10,7 +10,7 @@
 
 	ul.websiteList
 		each website in user.websites
-			li(data-domain=`${website.domain}` class=selWebsite === website.domain ? "selected" : "")
+			li(data-domain=`${website.domain}` data-websiteid=`${website._id}` class=selWebsite === website.domain ? "selected" : "")
 				.actions
 					a(href=`/websites/${website.domain}`).stats
 					a(href=`/websites/forms/${website.domain}`).forms

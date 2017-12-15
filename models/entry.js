@@ -38,7 +38,7 @@ EntrySchema.statics.getPageViews = function(userId, domain, fromDate, toDate, fp
 		}
 
 		let query = {
-			'userId': userId,
+			// 'userId': userId,
 			'domain': domain,
 			'data_point.name': 'page view',
 			'device': {
@@ -89,7 +89,7 @@ EntrySchema.statics.getPageViews = function(userId, domain, fromDate, toDate, fp
 EntrySchema.statics.getDevices = function(userId, domain, fromDate, toDate, fp, callback){
 
 	let query = {
-		'userId': userId,
+		// 'userId': userId,
 		'domain': domain
 	};
 

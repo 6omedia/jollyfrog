@@ -33,14 +33,6 @@ websitesRoutes.post('/add', mid.jsonLoginRequired, function(req, res){
 			return res.json(body);
 		}
 
-		// const website = new Website({
-		// 	userId: user._id,
-		// 	name: req.body.name,
-	 //        domain: req.body.domain,
-		//     forms: req.body.forms || [],
-	 //        campaigns: req.body.campaigns || []
-		// });
-
 		Website.create({
 			userId: user._id,
 			name: req.body.name,
@@ -55,6 +47,7 @@ websitesRoutes.post('/add', mid.jsonLoginRequired, function(req, res){
 					body.error = 'A website with that domain already exists';
 					return res.json(body);
 				}
+
 				res.status(err.status || 500);
 				body.error = 'Some error';
 				return res.json(body);
@@ -69,11 +62,21 @@ websitesRoutes.post('/add', mid.jsonLoginRequired, function(req, res){
 					return res.json(body);
 				}
 
-				body.websites = user.websites;
-				body.success = 'Website Created';
+				user.populate('websites', function(err){
 
-				res.status(200);
-				return res.json(body);
+					if(err){
+						res.status(err.status || 500);
+						body.error = 'Some error';
+						return res.json(body);
+					}
+
+					body.websites = user.websites;
+					body.success = 'Website Created';
+
+					res.status(200);
+					return res.json(body);
+
+				});
 
 			});
 
@@ -116,12 +119,12 @@ websitesRoutes.post('/edit/:domain', mid.jsonLoginRequired, function(req, res){
 
 });
 
-websitesRoutes.delete('/:domain', mid.jsonLoginRequired, function(req, res){
+websitesRoutes.delete('/:website_id', mid.jsonLoginRequired, function(req, res){
 
 	let body = {};
-	const domain = req.params.domain;
+	const website_id = req.params.website_id;
 
-	Website.remove({userId: req.session.userId, domain: domain}, function(err, removed){
+	Website.remove({userId: req.session.userId, _id: website_id}, function(err, removed){
 
 		if(err){
 			res.status(err.status || 500);
@@ -138,9 +141,7 @@ websitesRoutes.delete('/:domain', mid.jsonLoginRequired, function(req, res){
 		User.findOneAndUpdate({_id: req.session.userId},
 		{
 			$pull: {
-				websites: {
-					domain: domain
-				}
+				websites: website_id
 			}
 		}, function(err, user){
 
@@ -150,50 +151,24 @@ websitesRoutes.delete('/:domain', mid.jsonLoginRequired, function(req, res){
 				return res.json(body);
 			}
 
-			body.success = 'Domain Updated';
-			res.status(200);
-			return res.json(body);
+			user.populate('websites', function(err){
+
+				if(err){
+					res.status(err.status || 500);
+					body.error = err.message;
+					return res.json(body);
+				}
+
+				body.success = 'Domain Updated';
+				body.websites = user.websites;
+				res.status(200);
+				return res.json(body);
+
+			});
 
 		});
 
 	});
-
-
-
-	// User.update({_id: req.session.userId, 'websites.domain': domain},
-	// {
-	// 	$pull: {
-	// 		websites: {domain: domain}
-	// 	}
-	// }, function(err, affected){
-
-	// 	if(err){
-	// 		res.status(err.status || 500);
-	// 		body.error = err.message;
-	// 		return res.json(body);
-	// 	}
-
-	// 	if(affected.nModified < 1){
-	// 		res.status(404);
-	// 		body.error = 'Domain not found';
-	// 		return res.json(body);
-	// 	}
-
-	// 	User.findById(req.session.userId, function(err, user){
-
-	// 		if(err){
-	// 			res.status(err.status || 500);
-	// 			body.error = err.message;
-	// 			return res.json(body);
-	// 		}
-
-	// 		body.websites = user.websites;
-	// 		res.status(200);
-	// 		return res.json(body);
-
-	// 	});
-
-	// });
 
 });
 
@@ -202,7 +177,13 @@ websitesRoutes.get('/:domain/stats', mid.jsonLoginRequired, function(req, res){
 	let body = {};
 	const domain = req.params.domain;
 
-	User.findById(req.session.userId, function(err, user){
+	let fp = '';
+
+	if(req.query.funnelposition){
+		fp = req.query.funnelposition;
+	}
+
+	Entry.getPageViews(req.session.userId, domain, 'from', 'to', fp, function(err, pageviews){
 
 		if(err){
 			res.status(err.status || 500);
@@ -210,38 +191,7 @@ websitesRoutes.get('/:domain/stats', mid.jsonLoginRequired, function(req, res){
 			return res.json(body);
 		}
 
-		if(user.websites){
-		
-			let found = false;
-
-			for(i=0; i<user.websites.length; i++){
-
-				let website = user.websites[i];
-				if(website.domain == domain){
-					found = true;
-				}
-
-			}
-
-			if(!found){
-				res.status(404);
-				body.error = 'after loop - Domain not found for user';
-				return res.json(body);
-			}
-
-		}else{
-			res.status(404);
-			body.error = 'no user websites - Domain not found for user';
-			return res.json(body);
-		}
-
-		let fp = '';
-
-		if(req.query.funnelposition){
-			fp = req.query.funnelposition;
-		}
-
-		Entry.getPageViews(req.session.userId, domain, 'from', 'to', fp, function(err, pageviews){
+		Entry.getDevices(req.session.userId, domain, 'from', 'to', fp, function(err, devices){
 
 			if(err){
 				res.status(err.status || 500);
@@ -249,20 +199,10 @@ websitesRoutes.get('/:domain/stats', mid.jsonLoginRequired, function(req, res){
 				return res.json(body);
 			}
 
-			Entry.getDevices(req.session.userId, domain, 'from', 'to', fp, function(err, devices){
-
-				if(err){
-					res.status(err.status || 500);
-					body.error = err.message;
-					return res.json(body);
-				}
-
-				res.status(200);
-				body.page_views = pageviews;
-				body.unique_devices = devices;
-				return res.json(body);
-
-			});
+			res.status(200);
+			body.page_views = pageviews;
+			body.unique_devices = devices;
+			return res.json(body);
 
 		});
 

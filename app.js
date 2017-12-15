@@ -91,25 +91,28 @@ app.use('/', mainRoutes);
 var adminRoutes = require('./controllers/admin.js');
 app.use('/admin', adminRoutes);
 
+// audience routes
+var audiencesRoutes = require('./controllers/audiences.js');
+app.use('/audiences', audiencesRoutes);
+
 // api routes
 var apiRoutes = require('./controllers/api/tracking.js');
 app.use('/api', apiRoutes);
 
-// api routes
 var webApiRoutes = require('./controllers/api/websites.js');
 app.use('/api/websites', webApiRoutes);
 
-// api routes
 var dashboardApiRoutes = require('./controllers/api/dashboard.js');
 app.use('/api/dashboard', dashboardApiRoutes);
 
-// api routes
 var blockedDevicesApiRoutes = require('./controllers/api/blocked_devices.js');
 app.use('/api/blocked-devices', blockedDevicesApiRoutes);
 
-// api routes
 var formsApiRoutes = require('./controllers/api/forms.js');
 app.use('/api/forms', formsApiRoutes);
+
+var audiencesApiRoutes = require('./controllers/api/audiences.js');
+app.use('/api/audiences', audiencesApiRoutes);
 
 app.use(function(err, req, res, next) {
 	res.status(err.status || 500);

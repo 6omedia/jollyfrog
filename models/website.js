@@ -18,7 +18,7 @@ var WebsiteSchema = new Schema(
             ref: 'Form'
         }],
         campaigns: [{
-            type: Schema.Types.ObjectId, 
+            type: Schema.Types.ObjectId,
             ref: 'Campaign'
         }]
 	}

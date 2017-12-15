@@ -3,6 +3,7 @@ const mainRoutes = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/user');
 const Entry = require('../models/entry');
+const Form = require('../models/form');
 const ExcludedDevice = require('../models/excluded_device');
 const mid = require('../middleware/session');
 const helpers = require('../helpers/helpers');
@@ -25,6 +26,8 @@ mainRoutes.post('/', function(req, res){
 		User.authenticate(req.body.email, req.body.password, function(err, user){
 
 			if(err || !user){
+
+				console.log('Err ', err);
 
 				res.status(err.status);
 				return res.render('home', {
@@ -222,11 +225,13 @@ mainRoutes.delete('/profile/:userId', mid.jsonLoginRequired, function(req, res){
 
 mainRoutes.get('/websites', mid.loginRequired, function(req, res){
 
-	User.findById(req.session.userId, function(err, user){
+	User.findById(req.session.userId).populate('websites').exec(function(err, user){
 
         if(err){
             return next(err);
         }
+
+        // console.log('Websties ', user);
 
 		res.render('websites/websites', {
 			error: '',
@@ -244,7 +249,7 @@ mainRoutes.get('/websites/:domain', mid.loginRequired, function(req, res, next){
 	const domain = req.params.domain;
 	let theWebsite = '';
 
-	User.findById(req.session.userId, function(err, user){
+	User.findById(req.session.userId).populate('websites').exec(function(err, user){
 
         if(err){
             return next(err);
@@ -278,6 +283,8 @@ mainRoutes.get('/websites/:domain', mid.loginRequired, function(req, res, next){
 				next(err);
 			}
 
+			// console.log('Page Views ', pageviews);
+
 			stats.pageviews = pageviews;
 
 			Entry.getDevices(req.session.userId, domain, 'from', 'to', '', function(err, devices){
@@ -309,33 +316,39 @@ mainRoutes.get('/websites/forms/:domain', mid.loginRequired, function(req, res){
 
 	const domain = req.params.domain;
 
-	User.findById(req.session.userId, function(err, user){
+	User.findById(req.session.userId)
+		.populate('websites')
+		.exec(function(err, user){
 
         if(err){
             return next(err);
         }
 
-        User.findOne({
-			_id: req.session.userId, 
-			'websites.domain': domain
-		}, {
-			name: 1,
-	        'websites.$' : 1
-		}, function(err, userWebs){
+        let theWebsite = '';
 
-			if(err){
+        user.websites.forEach(function(website){
+        	if(website.domain == domain){
+        		theWebsite = website;
+        	}
+        });
+
+        theWebsite.populate('forms', function(err){
+
+        	if(err){
 	            return next(err);
 	        }
 
-			res.render('websites/forms', {
+	        console.log(theWebsite.forms);
+
+	        res.render('websites/forms', {
 				error: '',
 				current: 'websites',
 				user: user,
 				selWebsite: domain,
-				website: userWebs.websites[0]
+				website: theWebsite
 			});
 
-		});
+        });
 
 	});
 
@@ -345,32 +358,26 @@ mainRoutes.get('/websites/forms/:domain/new', mid.loginRequired, function(req, r
 
 	const domain = req.params.domain;
 
-	User.findById(req.session.userId, function(err, user){
+	User.findById(req.session.userId).populate('websites').exec(function(err, user){
 
         if(err){
             return next(err);
         }
+ 
+        let theWebsite = '';
 
-        User.findOne({
-			_id: req.session.userId, 
-			'websites.domain': domain
-		}, {
-			name: 1,
-	        'websites.$' : 1
-		}, function(err, userWebs){
+        user.websites.forEach(function(website){
+        	if(website.domain == domain){
+        		theWebsite = website;
+        	}
+        });
 
-			if(err){
-	            return next(err);
-	        }
-
-	        res.render('websites/new_form', {
-				error: '',
-				current: 'websites',
-				user: user,
-				selWebsite: domain,
-				website: userWebs.websites[0]
-			});
-
+        res.render('websites/new_form', {
+			error: '',
+			current: 'websites',
+			user: user,
+			selWebsite: domain,
+			website: theWebsite
 		});
 
     });

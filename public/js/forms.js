@@ -24,7 +24,7 @@
 
 				$('.webForms').removeClass('spinning');
 				if(data.success){
-					callback(null, data.user[0].websites[0].forms);
+					callback(null, data.forms);
 				}else{
 					callback(data.error, null);
 				}
@@ -123,8 +123,8 @@
 						var field = form.fields[j];
 
 						aForm += '<li>';
-							aForm += '<p>' + field.name + '</p>';
-							aForm += '<p class="id">ID: ' + field.field_id + '</p>';
+							aForm += '<p>' + field.data_point + '</p>';
+							aForm += '<p class="id">ID: ' + field.input_id + '</p>';
 						aForm += '</li>';
 
 					}

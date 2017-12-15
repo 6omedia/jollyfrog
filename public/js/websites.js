@@ -29,10 +29,10 @@
 			}
 		});
 	};
-	Model.prototype.removeWebsite = function(domain, callback){
+	Model.prototype.removeWebsite = function(websiteId, callback){
 		var thisModel = this;
 		$.ajax({
-			url: '/api/websites/' + domain,
+			url: '/api/websites/' + websiteId,
 			method: 'DELETE',
 			success: function(data){
 				if(data.error){
@@ -97,9 +97,10 @@
 		for(i=0; i<websites.length; i++){
 			var website = websites[i];
 			var string = '';
-			string += '<li data-domain="' + website.domain + '">';
+			string += '<li data-domain="' + website.domain + '" data-websiteid="' + website._id + '">';
 			string += '<div class="actions">';
 				string += '<a href="/websites/' + website.domain + '" class="stats"></a>';
+				string += '<a href="/websites/forms/' + website.domain + '" class="forms"></a>';
 				string += '<span class="edit"></span>';
 				string += '<span class="remove"></span>';
 			string += '</div>';
@@ -187,7 +188,7 @@
 
 		view.websiteList.on('click', '.remove', function(){
 
-			var domain = $(this).parent().parent().data('domain');
+			var websiteId = $(this).parent().parent().data('websiteid');
 
 			var areYouSure = new Popup(
 				function(){
@@ -195,7 +196,7 @@
 					$('.theSide .websites').addClass('spinning');
 					this.popDown();
 
-					model.removeWebsite(domain, function(error){
+					model.removeWebsite(websiteId, function(error){
 						if(!error){
 							view.updateWebsites(model.websites);
 						}else{

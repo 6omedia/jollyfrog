@@ -42,6 +42,10 @@ UserSchema.pre('save', function(next){
 
     var user = this;
 
+    console.log('************  USER WAS SAVED  ****************');
+    console.log(user);
+    console.log('**********************************************');
+
     bcrypt.hash(user.password, 10, function(err, hash){
         if(err){
             return next(err);
@@ -98,7 +102,11 @@ UserSchema.statics.authenticate = function(email, password, callback){
             return callback(err, null);
         }
 
+        console.log('authenticate ', user);
+
         bcrypt.compare(password, user.password, function(err, result){
+
+            console.log('Err ', err, ' Result ', result);
 
             if(result === true){
                 return callback(null, user);

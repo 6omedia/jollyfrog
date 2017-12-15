@@ -3,7 +3,8 @@ var mongoose = require('mongoose');
 var FormFields = new mongoose.Schema(
 	{
 		data_point: String,
-        input_id: String
+        input_id: String,
+        required: Boolean
 	}
 );
 

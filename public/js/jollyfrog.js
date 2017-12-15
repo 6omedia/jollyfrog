@@ -9,6 +9,8 @@ function JFrogForm(name, sBtn, fields, trackObj, url){
 	if(document.getElementById(this.submitBtn)){
 		document.getElementById(this.submitBtn).addEventListener('click', function(){
 			
+			console.log('Clicked!');
+
 			thisFrogForm.submitForm(thisFrogForm, trackObj, url);
 
 		});
@@ -44,11 +46,21 @@ JFrogForm.prototype.submitForm = function(form, trackObj, url){
 
 		var dps = [];
 
+		console.log('form.fields ', form.fields);
+
 		for(i=0; i<form.fields.length; i++){
+
+			var value = '';
             
+			var element = document.getElementById(form.fields[i].input_id);
+			
+			if(element){
+				var value = element.value;
+			}
+
             dps.push({
-                name: form.fields[i].name,
-                value: form.fields[i].value
+                name: form.fields[i].data_point,
+                value: value
             });
 
 		}
@@ -56,12 +68,17 @@ JFrogForm.prototype.submitForm = function(form, trackObj, url){
 		trackObj.form_name = form.name;
         trackObj.datapoints = dps;
 
+        console.log('TrackObj ', trackObj.datapoints);
+
 		var url = url + '/api/log_formsubmission';
 
 		var xhttp = new XMLHttpRequest();
-	    xhttp.onreadystatechange = function(){
-	        if(this.readyState == 4){
+	    xhttp.onreadystatechange = function(data){
+	        
+	    	console.log('Ghjk ', data);
 
+	        if(this.readyState == 4){
+	        	console.log('Yeah');
 	        }
 	    };
 	    xhttp.open("POST", url, true);
@@ -134,8 +151,10 @@ JFrog.prototype.findForms = function(apiKey){
     xhttp.onreadystatechange = function(){
         if(this.readyState == 4){
 
-        	var forms = JSON.parse(this.response).forms[0].websites[0].forms;
-        	
+        	var forms = JSON.parse(this.response).forms;
+
+        	console.log(forms);
+
         	for(i=0; i<forms.length; i++){
 
 				var aForm = new JFrogForm(
@@ -149,6 +168,8 @@ JFrog.prototype.findForms = function(apiKey){
 				thisFrog.forms.push(aForm);
 
 			}
+
+			console.log('FORMS ', thisFrog.forms);
 
         }
     };
