@@ -1,4 +1,8 @@
 extends audiences_layout
 
 block content
-	h2 Audiences
+	if audience
+		h1 #{audience.name}
+		ul.list
+			each email in emails
+				li #{email.email}

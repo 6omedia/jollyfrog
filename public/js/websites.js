@@ -16,6 +16,7 @@
 				domain: domain
 			},
 			success: function(data){
+
 				if(data.error){
 					return callback(data.error);
 				}else{

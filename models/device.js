@@ -10,7 +10,8 @@ var DeviceSchema = new mongoose.Schema({
     screen: {
         res: String,
         colorDepth: String
-    }
+    },
+    email: String
 });
 
 DeviceSchema.statics.addDeviceIfNew = function(deviceObj, callback){

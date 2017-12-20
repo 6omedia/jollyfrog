@@ -1,0 +1,111 @@
+extends audiences_layout
+
+block content
+	h2 Create a new Audience
+	.form#new_audience_form
+		ul
+			li
+				label.break Audience Name
+				if audience
+					input(type="text", placeholder="Name...", value=`${audience.name}`)#q_name
+				else
+					input(type="text", placeholder="Name...")#q_name
+			li
+				label.break Domains
+				if audience
+					.like_input.domains#domains
+						span #{audience.domains.length} 
+						p  Domains
+					.multiple_select.domain_list
+						each domain in websites
+							.aList
+								- var included = audience.domains.includes(domain.domain);
+								if included == true
+									.checkBox.ticked(data-value=`${domain.domain}`)
+								else
+									.checkBox(data-value=`${domain.domain}`)
+								span #{domain.domain}
+				else
+					.like_input.domains#domains
+						span 0 
+						p  Domains
+					.multiple_select.domain_list
+						each domain in websites
+							.aList
+								.checkBox(data-value=`${domain.domain}`)
+								span #{domain.domain}
+
+			li
+				label.break WP Categories
+				if audience
+					input(type="text", placeholder="Categories seperated by commas...", value=`${catsString}`)#q_cats
+				else
+					input(type="text", placeholder="Categories seperated by commas...")#q_cats
+			li
+				label.break Browsers
+				if audience
+					.like_input#browsers 
+						span #{audience.browser.length} 
+						p  Browsers
+					.multiple_select.browser_list
+						each browser in browsers
+							.aList
+								- var included = audience.browser.includes(browser);
+								if included
+									.checkBox.ticked(data-value=`${browser}`)
+								else
+									.checkBox(data-value=`${browser}`)
+								span #{browser}
+				else
+					.like_input#browsers 
+						span 0 
+						p  Browsers
+					.multiple_select.browser_list
+						.aList
+							.checkBox(data-value='Internet Explorer')
+							span Internet Explorer
+						.aList
+							.checkBox(data-value='Chrome')
+							span Chrome
+						.aList
+							.checkBox(data-value='Safari')
+							span Safari
+						.aList
+							.checkBox(data-value='Fire Fox')
+							span Fire Fox
+
+			li
+				label.break Funnel Position
+				if audience
+					select#funnel_position
+						option(value="") - all -
+						if audience.funnel_position == 'awareness'
+							option(value="awareness" selected) Awareness
+						else
+							option(value="awareness") Awareness
+						if audience.funnel_position == 'research'
+							option(value="research" selected) Research
+						else
+							option(value="research") Research
+						if audience.funnel_position == 'comparison'
+							option(value="comparison" selected) Comparison
+						else
+							option(value="comparison") Comparison
+						if audience.funnel_position == 'purchase'
+							option(value="purchase" selected) Purchase
+						else
+							option(value="purchase") Purchase
+				else
+					select#funnel_position
+						option(value="") - all -
+						option(value="awareness") Awareness
+						option(value="research") Research
+						option(value="comparison") Comparison
+						option(value="purchase") Purchase
+
+		if mode == 'edit'
+			.btn(data-audienceid=`${audience._id}`)#update Update Audience
+		else
+			.btn#save Save Audience
+		#theError
+		#spin

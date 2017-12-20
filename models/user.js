@@ -35,16 +35,16 @@ let UserSchema = new Schema(
 UserSchema.pre('save', function(next){
 
     var now = new Date();
- 
+
     if(this.isNew) {
         this.created_at = now;
     }
 
     var user = this;
 
-    console.log('************  USER WAS SAVED  ****************');
-    console.log(user);
-    console.log('**********************************************');
+    // console.log('************  USER WAS SAVED  ****************');
+    // console.log(user);
+    // console.log('**********************************************');
 
     bcrypt.hash(user.password, 10, function(err, hash){
         if(err){

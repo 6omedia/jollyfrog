@@ -77,6 +77,31 @@ ul {
 
 }
 
+#theMessage {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    background: #fff;
+    text-align: center;
+    width: 100%;
+    padding: 25px;
+    font-size: 20px;
+    background: #fff;
+    border-top: solid 4px #8ae09e;
+}
+
+#theMessage p {
+    margin-bottom: 0px;
+}
+
+#theMessage.error_msg {
+    border-top: solid 4px #b63f3f;
+}
+
+#theMessage.slideup {
+    display: block;
+}
+
 .side_menu {
     background: linear-gradient(#001a32, #5c6a53);
     width: 120px;
@@ -463,8 +488,21 @@ table.spinning::before {
     text-align: right;
 }
 
-.websiteList .actions span,
+/*.websiteList .actions span,
 .websiteList .actions a {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 10px;
+    cursor: pointer;
+}*/
+
+.actions {
+    text-align: right;
+}
+
+.actions span,
+.actions a {
     display: inline-block;
     width: 16px;
     height: 16px;
@@ -489,6 +527,11 @@ table.spinning::before {
 
 .actions .remove {
     background: url(../img/delete.png) no-repeat 50%;
+    background-size: 100%;
+}
+
+.actions .emails {
+    background: url(../img/email.png) no-repeat 50%;
     background-size: 100%;
 }
 
@@ -606,7 +649,6 @@ table.spinning::before {
 
 .sideList {
     background: #fff;
-    box-shadow: 7px 0px 15px 0px rgba(0, 0, 0, 0.18);
     height: 100%;
     padding: 20px;
 }
@@ -913,13 +955,24 @@ table.spinning::before {
     color: #fff;
 }
 
+.like_input p {
+    display: inline-block;
+    margin: 0px;
+}
+
 .form ul li {
     position: relative;
 }
 
-.form input {
+.form input,
+.form select {
     border: none;
     box-shadow: 2px 2px 0px #ececec;
+    min-width: 309px;
+}
+
+.form select {
+    padding: 5px 10px;
 }
 
 .checkBox {
@@ -928,6 +981,21 @@ table.spinning::before {
     background: #f4f4f4;
     display: inline-block;
     margin-right: 10px;
+}
+
+.checkBox.ticked {
+    position: relative;
+}
+
+.checkBox.ticked:before {
+    content: '';
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    background: #2a8f9f;
+    left: 3px;
+    top: 3px;
 }
 
 .multiple_select {
@@ -939,12 +1007,40 @@ table.spinning::before {
     background: #40cbe2;
     width: 215px;
     padding: 10px;
+    z-index: 1;
+}
+
+.multiple_select .aList span {
+    color: #026474;
 }
 
 .open + .multiple_select {
     display: inline-block;
 }
 
+#new_audience_form ul {
+    margin-bottom: 40px;
+}
+
 #new_audience_form ul li {
     display: inline-block;
+}
+
+#theError {
+    display: none;
+}
+
+#audiences {
+    margin-top: 10px;
+}
+
+#audiences > li {
+    border-top: solid 3px #40cbe2;
+    margin-bottom: 28px;
+    background: linear-gradient(#cff8ff, #fff);
+    padding: 10px 15px;
+}
+
+#audiences p {
+    font-size: 24px;
 }

@@ -47,22 +47,20 @@ websitesRoutes.post('/add', mid.jsonLoginRequired, function(req, res){
 					body.error = 'A website with that domain already exists';
 					return res.json(body);
 				}
-
 				res.status(err.status || 500);
 				body.error = 'Some error';
 				return res.json(body);
 			}
 
-			user.websites.push(website);
-			user.save(function(err, user){
-
-				if(err){
-					res.status(err.status || 500);
-					body.error = 'Some error';
-					return res.json(body);
-				}
-
-				user.populate('websites', function(err){
+			User.findByIdAndUpdate(
+				req.session.userId,
+				{
+					$push: {
+						websites: website
+					}
+				},
+				{ new: true },
+				function(err, user){
 
 					if(err){
 						res.status(err.status || 500);
@@ -70,15 +68,54 @@ websitesRoutes.post('/add', mid.jsonLoginRequired, function(req, res){
 						return res.json(body);
 					}
 
-					body.websites = user.websites;
-					body.success = 'Website Created';
+					user.populate('websites', function(err){
 
-					res.status(200);
-					return res.json(body);
+						if(err){
+							res.status(err.status || 500);
+							body.error = 'Some error';
+							return res.json(body);
+						}
 
-				});
+						body.websites = user.websites;
 
-			});
+						console.log('Websites ', body.websites);
+
+						body.success = 'Website Created';
+
+						res.status(200);
+						return res.json(body);
+
+					});	
+
+				}
+			);
+
+			// user.websites.push(website);
+			// user.save(function(err, user){
+
+			// 	if(err){
+			// 		res.status(err.status || 500);
+			// 		body.error = 'Some error';
+			// 		return res.json(body);
+			// 	}
+
+			// 	user.populate('websites', function(err){
+
+			// 		if(err){
+			// 			res.status(err.status || 500);
+			// 			body.error = 'Some error';
+			// 			return res.json(body);
+			// 		}
+
+			// 		body.websites = user.websites;
+			// 		body.success = 'Website Created';
+
+			// 		res.status(200);
+			// 		return res.json(body);
+
+			// 	});
+
+			// });
 
 		});
 

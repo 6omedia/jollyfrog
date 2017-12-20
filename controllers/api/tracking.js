@@ -108,8 +108,9 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
      req.socket.remoteAddress ||
      req.connection.socket.remoteAddress;
 
-    // const dataPoints = JSON.parse(req.body.datapoints);
     const dataPoints = req.body.datapoints;
+
+    let foundEmail = null;
 
     const dateNow = new Date();
     let formEntries = [];
@@ -134,6 +135,10 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
 			referer: req.body.referer || ''
     	});
 
+    	if(dataPoints[i].name == 'email'){
+    		foundEmail = dataPoints[i].value;
+    	}
+
     	formEntries.push(entry.save());
 
     }
@@ -151,7 +156,7 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
 
 				if(!device){
 
-					Device.create({
+					var dObj = {
 						fingerprint: req.body.fingerprint,
 					    type: req.body.type,
 					    vendor: req.body.vendor,
@@ -160,7 +165,13 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
 					        res: req.body.screen.res,
 					        colorDepth: req.body.colorDepth
 					    }
-					}, function(err, device){
+					};
+
+					if(foundEmail){
+						dObj.email = foundEmail;
+					}
+
+					Device.create(dObj, function(err, device){
 
 						if(err){
 							res.status(err.status || 500);
@@ -174,13 +185,34 @@ trackingRoutes.post('/log_formsubmission', mid.apiKeyRequired, function(req, res
 
 					});
 
+				}else{
+
+					if(foundEmail){
+
+						device.email = foundEmail;
+						device.save()
+							.then(() => {
+								res.status(200);
+								data.success = 'Successfull Entry';
+								return res.json(data);
+							})
+							.catch((err) => {
+								res.status(err.status || 500);
+								data.error = err;
+								return res.json(data);
+							});
+
+					}else{
+
+						res.status(200);
+						data.success = 'Successfull Entry';
+						return res.json(data);
+
+					}
+
 				}
 
 			});
-
-    		res.status(200);
-			data.success = 'Successfull Entry';
-			return res.json(data);
 
     	})
     	.catch((err) => {
