@@ -68,7 +68,7 @@ blockedDevicesRoutes.delete('/:fingerprint', mid.jsonLoginRequired, function(req
 
 	let body = {};
 
-	ExcludedDevice.remove({fingerprint: req.params.fingerprint}, function(err, exDevice){
+	ExcludedDevice.remove({userId: req.session.userId, fingerprint: req.params.fingerprint}, function(err, exDevice){
 
 		if(err){
 			body.error = err.message || 'Some sort of error...';
@@ -88,7 +88,7 @@ blockedDevicesRoutes.get('/:fingerprint', mid.jsonLoginRequired, function(req, r
 
 	let body = {};
 
-	ExcludedDevice.findOne({fingerprint: req.params.fingerprint}, function(err, device){
+	ExcludedDevice.findOne({userId: req.session.userId, fingerprint: req.params.fingerprint}, function(err, device){
 
 		if(err){
 			body.error = err.message || 'Some sort of error...';
